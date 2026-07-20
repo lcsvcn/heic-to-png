@@ -15,15 +15,11 @@ struct HEICToPNGMacApp: App {
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
-    private let popover = NSPopover()
+    private var windowController: NSWindowController?
     private let viewModel = MacConversionViewModel()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        popover.behavior = .transient
-        popover.contentSize = NSSize(width: 360, height: 460)
-        popover.contentViewController = NSHostingController(
-            rootView: MacDropView(viewModel: viewModel)
-        )
+        windowController = makeConverterWindow()
 
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         if let button = item.button {
@@ -31,26 +27,53 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 systemSymbolName: "photo.badge.arrow.down",
                 accessibilityDescription: "Convert HEIC to PNG"
             )
-            button.action = #selector(togglePopover(_:))
+            button.action = #selector(toggleConverterWindow(_:))
             button.target = self
         }
         statusItem = item
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {
+        showConverterWindow()
         viewModel.convert(urls: urls)
     }
 
-    @objc private func togglePopover(_ sender: AnyObject?) {
-        guard let button = statusItem?.button else {
+    @objc private func toggleConverterWindow(_ sender: AnyObject?) {
+        guard let window = windowController?.window else {
             return
         }
 
-        if popover.isShown {
-            popover.performClose(sender)
+        if window.isVisible {
+            window.orderOut(sender)
         } else {
-            popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-            popover.contentViewController?.view.window?.makeKey()
+            showConverterWindow()
         }
+    }
+
+    private func makeConverterWindow() -> NSWindowController {
+        let hostingController = NSHostingController(
+            rootView: MacDropView(viewModel: viewModel)
+        )
+        let window = NSWindow(contentViewController: hostingController)
+        window.title = "HEIC to PNG"
+        window.styleMask = [
+            .titled,
+            .closable,
+            .miniaturizable,
+            .resizable,
+            .fullSizeContentView
+        ]
+        window.isReleasedWhenClosed = false
+        window.setContentSize(NSSize(width: 430, height: 660))
+        window.minSize = NSSize(width: 390, height: 560)
+        window.center()
+
+        return NSWindowController(window: window)
+    }
+
+    private func showConverterWindow() {
+        NSApp.activate(ignoringOtherApps: true)
+        windowController?.showWindow(nil)
+        windowController?.window?.makeKeyAndOrderFront(nil)
     }
 }

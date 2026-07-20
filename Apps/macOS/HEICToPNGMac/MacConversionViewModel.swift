@@ -3,6 +3,12 @@ import Foundation
 import HEICPNGCore
 import UniformTypeIdentifiers
 
+private struct MacExpandedConversionInput: Sendable {
+    let fileURLs: [URL]
+    let failures: [HEICPNGConversionFailure]
+    let scopedFolderURLs: [URL]
+}
+
 @MainActor
 final class MacConversionViewModel: ObservableObject {
     @Published var converted: [HEICPNGConversionResult] = []
@@ -81,12 +87,54 @@ final class MacConversionViewModel: ObservableObject {
         return [successText, failureText].compactMap { $0 }.joined(separator: ", ")
     }
 
+    var watchedFolderSummary: String {
+        guard autoConvertNewHEICFiles else {
+            return "Off"
+        }
+
+        let folderCount = watchedFolderNames.count
+        if folderCount == 0 {
+            return "No folders"
+        }
+
+        return folderCount == 1 ? "Watching 1 folder" : "Watching \(folderCount) folders"
+    }
+
+    var watchedFolderNames: [String] {
+        var names: [String] = []
+
+        if autoWatchDownloadsFolder {
+            names.append("Downloads")
+        }
+
+        if autoWatchDesktopFolder {
+            names.append("Desktop")
+        }
+
+        names.append(contentsOf: customWatchedFolderNames)
+        return names
+    }
+
     func chooseFiles() {
         let panel = NSOpenPanel()
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = false
         panel.canChooseFiles = true
         panel.allowedContentTypes = [.heic, .heif]
+        panel.prompt = "Convert"
+
+        guard panel.runModal() == .OK else {
+            return
+        }
+
+        convert(urls: panel.urls)
+    }
+
+    func chooseFolderToConvert() {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = true
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
         panel.prompt = "Convert"
 
         guard panel.runModal() == .OK else {
@@ -108,7 +156,18 @@ final class MacConversionViewModel: ObservableObject {
         let shouldCopy = autoCopyConvertedFiles
 
         Task.detached { [converter] in
-            let batch = converter.convert(urls: urls)
+            let input = Self.expandedConversionInput(from: urls, converter: converter)
+            defer {
+                for folderURL in input.scopedFolderURLs {
+                    folderURL.stopAccessingSecurityScopedResource()
+                }
+            }
+
+            let conversionBatch = converter.convert(urls: input.fileURLs)
+            let batch = HEICPNGBatchResult(
+                converted: conversionBatch.converted,
+                failures: input.failures + conversionBatch.failures
+            )
             let outputURLs = batch.converted.map(\.outputURL)
 
             await MainActor.run {
@@ -247,5 +306,109 @@ final class MacConversionViewModel: ObservableObject {
 
     private static func customWatchedFolders() -> [URL] {
         MacConversionPreferences.customWatchedFolderURLs()
+    }
+
+    nonisolated private static func expandedConversionInput(
+        from urls: [URL],
+        converter: HEICPNGConverter,
+        fileManager: FileManager = .default
+    ) -> MacExpandedConversionInput {
+        var fileURLs: [URL] = []
+        var failures: [HEICPNGConversionFailure] = []
+        var scopedFolderURLs: [URL] = []
+        var seenPaths: Set<String> = []
+
+        for rawURL in urls {
+            let url = rawURL.standardizedFileURL
+            var isDirectory: ObjCBool = false
+            guard fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) else {
+                failures.append(
+                    HEICPNGConversionFailure(
+                        sourceURL: url,
+                        message: "Could not find \(url.lastPathComponent)."
+                    )
+                )
+                continue
+            }
+
+            if isDirectory.boolValue {
+                if url.startAccessingSecurityScopedResource() {
+                    scopedFolderURLs.append(url)
+                }
+
+                let folderFileURLs = heicFileURLs(
+                    in: url,
+                    converter: converter,
+                    fileManager: fileManager
+                )
+
+                if folderFileURLs.isEmpty {
+                    failures.append(
+                        HEICPNGConversionFailure(
+                            sourceURL: url,
+                            message: "No HEIC or HEIF images found in \(url.lastPathComponent)."
+                        )
+                    )
+                }
+
+                for fileURL in folderFileURLs {
+                    appendUnique(fileURL, to: &fileURLs, seenPaths: &seenPaths)
+                }
+            } else {
+                appendUnique(url, to: &fileURLs, seenPaths: &seenPaths)
+            }
+        }
+
+        return MacExpandedConversionInput(
+            fileURLs: fileURLs,
+            failures: failures,
+            scopedFolderURLs: scopedFolderURLs
+        )
+    }
+
+    nonisolated private static func heicFileURLs(
+        in folderURL: URL,
+        converter: HEICPNGConverter,
+        fileManager: FileManager
+    ) -> [URL] {
+        guard let enumerator = fileManager.enumerator(
+            at: folderURL,
+            includingPropertiesForKeys: [.isRegularFileKey],
+            options: [.skipsHiddenFiles, .skipsPackageDescendants]
+        ) else {
+            return []
+        }
+
+        var urls: [URL] = []
+        for case let url as URL in enumerator {
+            guard converter.isSupportedHEICFile(url),
+                  isRegularFile(url) else {
+                continue
+            }
+
+            urls.append(url)
+        }
+
+        return urls
+    }
+
+    nonisolated private static func appendUnique(
+        _ url: URL,
+        to urls: inout [URL],
+        seenPaths: inout Set<String>
+    ) {
+        let path = url.standardizedFileURL.path
+        guard !seenPaths.contains(path) else {
+            return
+        }
+
+        seenPaths.insert(path)
+        urls.append(url)
+    }
+
+    nonisolated private static func isRegularFile(
+        _ url: URL
+    ) -> Bool {
+        (try? url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile) == true
     }
 }

@@ -20,29 +20,11 @@ struct MacDropView: View {
                 Spacer()
             }
 
+            primaryActions
+
             dropZone
 
-            HStack(spacing: 12) {
-                Button {
-                    viewModel.chooseFiles()
-                } label: {
-                    Label("Choose", systemImage: "plus")
-                }
-
-                Button {
-                    viewModel.copyConvertedFiles()
-                } label: {
-                    Label("Copy", systemImage: "doc.on.doc")
-                }
-                .disabled(viewModel.converted.isEmpty)
-
-                Button {
-                    viewModel.revealConvertedFiles()
-                } label: {
-                    Label("Reveal", systemImage: "folder")
-                }
-                .disabled(viewModel.converted.isEmpty)
-            }
+            outputActions
 
             options
 
@@ -51,7 +33,57 @@ struct MacDropView: View {
             resultList
         }
         .padding(18)
-        .frame(minWidth: 390, minHeight: 650)
+        .frame(minWidth: 390, minHeight: 560)
+    }
+
+    private var primaryActions: some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 10) {
+                Button {
+                    viewModel.chooseFiles()
+                } label: {
+                    Label("Convert Files", systemImage: "photo.on.rectangle")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+
+                Button {
+                    viewModel.chooseFolderToConvert()
+                } label: {
+                    Label("Convert Folder", systemImage: "folder")
+                        .frame(maxWidth: .infinity)
+                }
+            }
+
+            Button {
+                viewModel.chooseWatchedFolder()
+            } label: {
+                Label("Watch Folder", systemImage: "folder.badge.plus")
+                    .frame(maxWidth: .infinity)
+            }
+            .disabled(!viewModel.autoConvertNewHEICFiles)
+        }
+        .controlSize(.large)
+    }
+
+    private var outputActions: some View {
+        HStack(spacing: 12) {
+            Button {
+                viewModel.copyConvertedFiles()
+            } label: {
+                Label("Copy", systemImage: "doc.on.doc")
+                    .frame(maxWidth: .infinity)
+            }
+            .disabled(viewModel.converted.isEmpty)
+
+            Button {
+                viewModel.revealConvertedFiles()
+            } label: {
+                Label("Reveal", systemImage: "folder")
+                    .frame(maxWidth: .infinity)
+            }
+            .disabled(viewModel.converted.isEmpty)
+        }
     }
 
     private var dropZone: some View {
@@ -68,14 +100,14 @@ struct MacDropView: View {
 
             VStack(spacing: 10) {
                 Image(systemName: "arrow.down.doc")
-                    .font(.system(size: 34, weight: .medium))
+                    .font(.system(size: 28, weight: .medium))
                     .foregroundStyle(isTargeted ? Color.accentColor : Color.secondary)
-                Text("Drop HEIC or HEIF files")
+                Text("Drop files or folders")
                     .font(.callout.weight(.medium))
                     .foregroundStyle(.secondary)
             }
         }
-        .frame(height: 150)
+        .frame(height: 110)
         .onDrop(
             of: [UTType.fileURL.identifier],
             isTargeted: $isTargeted,
@@ -130,6 +162,14 @@ struct MacDropView: View {
 
             Divider()
 
+            HStack {
+                Label("Automatic conversion", systemImage: "bolt.circle")
+                Spacer(minLength: 16)
+                Text(viewModel.watchedFolderSummary)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+
             optionToggle(
                 "Auto-convert new HEIC files",
                 systemImage: "bolt.circle",
@@ -169,7 +209,7 @@ struct MacDropView: View {
             Button {
                 viewModel.chooseWatchedFolder()
             } label: {
-                Label("Add Folder", systemImage: "folder.badge.plus")
+                Label("Watch Folder", systemImage: "folder.badge.plus")
             }
             .buttonStyle(.link)
             .disabled(!viewModel.autoConvertNewHEICFiles)

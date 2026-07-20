@@ -4,7 +4,7 @@ A native Swift workspace for converting HEIC/HEIF images to PNG on macOS and iOS
 
 ## What is included
 
-- macOS menu-bar app with drag-and-drop and automatic watched-folder conversion.
+- macOS menu-bar app with a persistent converter window, file/folder picking, drag-and-drop, and automatic watched-folder conversion.
 - Finder Quick Action named **Convert HEIC to PNG**.
 - iOS SwiftUI app with file import, copy, and share actions.
 - iOS Share Extension for Photos and Files.
@@ -36,12 +36,14 @@ A native Swift workspace for converting HEIC/HEIF images to PNG on macOS and iOS
 ### Menu-Bar App
 
 1. Build and run `HEICToPNGMac`.
-2. Click the menu-bar icon.
-3. Drop one or more `.heic` or `.heif` files, or choose files manually.
-4. Converted PNG files are saved beside the originals.
-5. Use **Copy** to copy converted PNG files to the clipboard.
-6. Use **Reveal** to show the converted files in Finder.
-7. Use the toggles to customize Finder Quick Action conversion, automatic reveal, automatic copy, and watched-folder conversion behavior.
+2. Click the menu-bar icon to open the converter window.
+3. Use **Convert Files** for selected HEIC/HEIF files.
+4. Use **Convert Folder** to scan a selected folder for HEIC/HEIF images.
+5. Optionally drop files or folders onto the window while it stays open.
+6. Converted PNG files are saved beside the originals.
+7. Use **Copy** to copy converted PNG files to the clipboard.
+8. Use **Reveal** to show the converted files in Finder.
+9. Use the toggles to customize Finder Quick Action conversion, automatic reveal, automatic copy, and watched-folder conversion behavior.
 
 ### Automatic AirDrop and Screenshot Conversion
 
@@ -52,7 +54,7 @@ Default watched folders:
 - **AirDrop / Downloads**: new `.heic` or `.heif` files in Downloads are converted to PNG beside the original.
 - **Desktop / Screenshots**: new `.heic` or `.heif` files on the Desktop are converted to PNG beside the original.
 
-Use **Add Folder** to watch another screenshot/export folder. This is useful if macOS screenshots or image exports are saved somewhere other than Desktop.
+Use **Watch Folder** to watch another screenshot/export folder. This is useful if macOS screenshots or image exports are saved somewhere other than Desktop.
 
 The watcher preserves the original HEIC/HEIF file. It skips files that already have a same-name `.png` beside them, so repeated folder scans do not create endless numbered duplicates.
 
