@@ -150,6 +150,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: ${{ env.HOMEBREW_TAP_REPO }}
+          ref: main
           ssh-key: ${{ secrets.HOMEBREW_TAP_DEPLOY_KEY }}
           path: homebrew-tap
 
@@ -158,6 +159,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: ${{ env.HOMEBREW_TAP_REPO }}
+          ref: main
           token: ${{ env.HOMEBREW_TAP_TOKEN }}
           path: homebrew-tap
 
@@ -182,10 +184,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet; then
+          if [[ -z "$(git status --porcelain -- Casks/heic-to-png.rb)" ]]; then
             echo "Homebrew cask is already up to date."
           else
             git add Casks/heic-to-png.rb
             git commit -m "Update heic-to-png to ${{ needs.release.outputs.version }}"
-            git push
+            git push origin HEAD:main
           fi
