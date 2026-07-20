@@ -35,6 +35,9 @@ cask "heic-to-png" do
     <<~EOS
       Launch HEIC to PNG once, then enable the Finder Quick Action:
       System Settings > Privacy & Security > Extensions > Finder > Convert HEIC to PNG
+
+      This no-cost build is not notarized. If macOS blocks first launch,
+      Control-click the app in Finder and choose Open.
     EOS
   end
 
@@ -44,4 +47,3 @@ cask "heic-to-png" do
   ]
 end
 RUBY
-

@@ -1,0 +1,19 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- assertVisible: "HEIC to PNG"
+- assertVisible:
+    id: "ios.statusText"
+    text: "Ready"
+- assertVisible:
+    id: "ios.chooseFilesButton"
+    enabled: true
+- assertVisible:
+    id: "ios.copyButton"
+    enabled: false
+- assertVisible:
+    id: "ios.shareButton"
+    enabled: false
+- assertVisible:
+    id: "ios.emptyState"

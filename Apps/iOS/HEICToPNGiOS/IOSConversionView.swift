@@ -14,6 +14,7 @@ struct IOSConversionView: View {
                         .foregroundStyle(Color.accentColor)
                     Text(viewModel.statusText)
                         .font(.headline)
+                        .accessibilityIdentifier("ios.statusText")
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.top, 24)
@@ -25,6 +26,7 @@ struct IOSConversionView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
+                .accessibilityIdentifier("ios.chooseFilesButton")
 
                 HStack(spacing: 12) {
                     Button {
@@ -35,6 +37,7 @@ struct IOSConversionView: View {
                     }
                     .buttonStyle(.bordered)
                     .disabled(viewModel.converted.isEmpty)
+                    .accessibilityIdentifier("ios.copyButton")
 
                     Button {
                         viewModel.shareConvertedImages()
@@ -44,9 +47,16 @@ struct IOSConversionView: View {
                     }
                     .buttonStyle(.bordered)
                     .disabled(viewModel.converted.isEmpty)
+                    .accessibilityIdentifier("ios.shareButton")
                 }
 
                 List {
+                    if viewModel.converted.isEmpty && viewModel.failures.isEmpty {
+                        Label("No recent conversions", systemImage: "clock")
+                            .foregroundStyle(.secondary)
+                            .accessibilityIdentifier("ios.emptyState")
+                    }
+
                     if !viewModel.converted.isEmpty {
                         Section("Converted") {
                             ForEach(viewModel.converted, id: \.outputURL) { result in
@@ -66,6 +76,7 @@ struct IOSConversionView: View {
                     }
                 }
                 .listStyle(.insetGrouped)
+                .accessibilityIdentifier("ios.resultsList")
             }
             .padding(.horizontal, 16)
             .navigationTitle("HEIC to PNG")
@@ -109,4 +120,3 @@ struct ActivityView: UIViewControllerRepresentable {
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
-

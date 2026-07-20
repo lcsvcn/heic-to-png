@@ -6,15 +6,29 @@ Use `make` from the repository root:
 
 ```bash
 make test
+make coverage
 make build-macos
 make build-ios
 make build
+make test-e2e-ios
 make run-macos
 make package-macos VERSION=1.0.0
+make smoke-homebrew-cask
+make smoke-macos-package VERSION=ci-smoke
 make ci
 ```
 
 The build commands use `HEICToPNG.xcodeproj` directly and keep build output under `.build/`.
+
+`make coverage` runs the shared converter package tests with SwiftPM coverage enabled and enforces `COVERAGE_MIN`, which defaults to 80 percent line coverage.
+
+`make test-e2e-ios` builds the iOS Simulator app and runs the Maestro flow in `.maestro/ios-smoke.yaml`. Maestro applies to the iOS app because it is a mobile UI automation tool. It is not used for the macOS menu-bar app or Finder Quick Action.
+
+Install Maestro locally with:
+
+```bash
+scripts/install-maestro.sh
+```
 
 For a local smoke test of app-level conversion:
 
@@ -36,9 +50,26 @@ When the app is running, the PNG should appear beside the HEIC file in Downloads
 
 ## GitHub Actions
 
-`CI` runs on pushes to `main`, pull requests, and manual dispatch. It runs the unit tests, builds the macOS app plus Finder Quick Action, and builds the iOS simulator app plus Share Extension.
+`CI` runs on pushes to `main`, pull requests, and manual dispatch. It has two jobs:
 
-`Release` runs when you push a tag like `v1.0.0`, or manually from GitHub Actions. It builds a macOS release zip, creates or updates a GitHub Release, uploads the zip and checksum, and can update a Homebrew tap.
+- `Unit, Coverage, Build, Package`: enforces converter coverage, builds the macOS app plus Finder Quick Action, builds the iOS simulator app plus Share Extension, smoke-tests Homebrew cask generation, and smoke-tests the macOS zip artifact.
+- `iOS Maestro E2E`: installs the free local Maestro CLI, builds the iOS Simulator app, installs it on a simulator, and runs the `.maestro/ios-smoke.yaml` flow.
+
+`Release` runs when you push a tag like `v1.0.0`, or manually from GitHub Actions. It runs the coverage and deployment smoke gates, builds a macOS release zip, creates or updates a GitHub Release, uploads the zip and checksum, and can update a Homebrew tap.
+
+## No-cost deployment model
+
+This project does not require the Mac App Store or a paid Apple Developer Program account for basic distribution.
+
+The free path is:
+
+1. GitHub Actions builds `HEICToPNG.app`.
+2. GitHub Releases hosts `HEICToPNG-<version>.zip` and its SHA-256 checksum.
+3. The optional Homebrew tap job updates a cask that installs the app into `/Applications`.
+
+Tradeoff: without Developer ID signing and notarization, macOS may show Gatekeeper warnings on first launch. A smoother “identified developer” install requires Developer ID signing and notarization, which requires Apple Developer Program membership.
+
+The iOS app and Share Extension are buildable from source, but broad iOS distribution still requires Apple-managed distribution channels. The no-cost release pipeline therefore focuses on macOS GitHub Release/Homebrew delivery.
 
 ## Homebrew tap deployment
 

@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    name: Build and Test
+  quality:
+    name: Unit, Coverage, Build, Package
     runs-on: macos-latest
 
     steps:
@@ -22,6 +22,50 @@ jobs:
       - name: Show Xcode version
         run: /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -version
 
-      - name: Run tests and builds
-        run: make ci
+      - name: Run quality gate
+        run: make ci VERSION=ci-smoke
 
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: coverage-report
+          path: |
+            .build/coverage/coverage.txt
+            .build/coverage/codecov.json
+
+      - name: Upload macOS package smoke artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: macos-ci-package
+          path: |
+            .build/release/HEICToPNG-ci-smoke.zip
+            .build/release/HEICToPNG-ci-smoke.zip.sha256
+
+  ios-e2e:
+    name: iOS Maestro E2E
+    runs-on: macos-latest
+    needs: quality
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java for Maestro
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Maestro CLI
+        run: scripts/install-maestro.sh
+
+      - name: Run iOS Maestro smoke flow
+        run: make test-e2e-ios
+
+      - name: Upload Maestro report
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: maestro-ios-report
+          path: .build/maestro

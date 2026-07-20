@@ -52,8 +52,14 @@ jobs:
           echo "tag=${tag}" >> "$GITHUB_OUTPUT"
           echo "version=${version}" >> "$GITHUB_OUTPUT"
 
-      - name: Build macOS release zip
-        run: make package-macos VERSION="${{ steps.version.outputs.version }}"
+      - name: Run coverage gate
+        run: make coverage
+
+      - name: Smoke test Homebrew cask generation
+        run: make smoke-homebrew-cask
+
+      - name: Build and smoke test macOS release zip
+        run: make smoke-macos-package VERSION="${{ steps.version.outputs.version }}"
 
       - name: Capture release outputs
         id: release-vars
@@ -170,4 +176,3 @@ jobs:
             git commit -m "Update heic-to-png to ${{ needs.release.outputs.version }}"
             git push
           fi
-

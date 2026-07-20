@@ -111,20 +111,24 @@ From the repository root:
 
 ```bash
 make test
+make coverage
 make build-macos
 make build-ios
+make test-e2e-ios
 make run-macos
 make ci
 ```
 
 `make package-macos VERSION=1.0.0` creates a Homebrew-ready macOS zip under `.build/release/`.
 
+`make test-e2e-ios` uses Maestro against the iOS Simulator app. Install Maestro first with `scripts/install-maestro.sh`.
+
 ## CI/CD and Homebrew
 
 GitHub Actions are included:
 
-- `CI`: runs tests and builds macOS plus iOS simulator targets.
-- `Release`: builds a macOS release zip, publishes a GitHub Release, and optionally updates a Homebrew Cask tap.
+- `CI`: runs coverage, builds macOS plus iOS simulator targets, smoke-tests the macOS zip, validates Homebrew cask generation, and runs a Maestro iOS E2E smoke flow.
+- `Release`: runs the coverage/package smoke gates, builds a macOS release zip, publishes a GitHub Release, and optionally updates a Homebrew Cask tap.
 
 For Homebrew deployment, configure repository secrets:
 
@@ -137,3 +141,4 @@ See `docs/CI_CD.md` for release and tap setup details.
 
 - iPhone screenshots are usually PNG already; camera photos are commonly HEIC unless **Settings → Camera → Formats → Most Compatible** is enabled.
 - Browsers do not allow a general-purpose app to silently replace every selected upload file. The Finder Quick Action, menu-bar app, iOS app, and Share Extension cover the reliable native workflows.
+- The no-cost macOS deployment path is GitHub Releases plus Homebrew Cask. Notarization and Developer ID distribution require Apple Developer Program membership.
