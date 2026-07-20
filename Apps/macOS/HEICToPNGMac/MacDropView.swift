@@ -110,33 +110,45 @@ struct MacDropView: View {
 
     private var options: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Toggle(isOn: $viewModel.finderQuickActionEnabled) {
-                Label("Finder Quick Action", systemImage: "filemenu.and.selection")
-            }
+            optionToggle(
+                "Finder Quick Action",
+                systemImage: "filemenu.and.selection",
+                isOn: $viewModel.finderQuickActionEnabled
+            )
 
-            Toggle(isOn: $viewModel.autoRevealConvertedFiles) {
-                Label("Reveal after converting", systemImage: "folder")
-            }
+            optionToggle(
+                "Reveal after converting",
+                systemImage: "folder",
+                isOn: $viewModel.autoRevealConvertedFiles
+            )
 
-            Toggle(isOn: $viewModel.autoCopyConvertedFiles) {
-                Label("Copy after converting", systemImage: "doc.on.doc")
-            }
+            optionToggle(
+                "Copy after converting",
+                systemImage: "doc.on.doc",
+                isOn: $viewModel.autoCopyConvertedFiles
+            )
 
             Divider()
 
-            Toggle(isOn: $viewModel.autoConvertNewHEICFiles) {
-                Label("Auto-convert new HEIC files", systemImage: "bolt.circle")
-            }
+            optionToggle(
+                "Auto-convert new HEIC files",
+                systemImage: "bolt.circle",
+                isOn: $viewModel.autoConvertNewHEICFiles
+            )
 
-            Toggle(isOn: $viewModel.autoWatchDownloadsFolder) {
-                Label("AirDrop / Downloads", systemImage: "arrow.down.circle")
-            }
-            .disabled(!viewModel.autoConvertNewHEICFiles)
+            optionToggle(
+                "AirDrop / Downloads",
+                systemImage: "arrow.down.circle",
+                isOn: $viewModel.autoWatchDownloadsFolder,
+                isEnabled: viewModel.autoConvertNewHEICFiles
+            )
 
-            Toggle(isOn: $viewModel.autoWatchDesktopFolder) {
-                Label("Desktop / Screenshots", systemImage: "camera.viewfinder")
-            }
-            .disabled(!viewModel.autoConvertNewHEICFiles)
+            optionToggle(
+                "Desktop / Screenshots",
+                systemImage: "camera.viewfinder",
+                isOn: $viewModel.autoWatchDesktopFolder,
+                isEnabled: viewModel.autoConvertNewHEICFiles
+            )
 
             ForEach(Array(viewModel.customWatchedFolderNames.enumerated()), id: \.offset) { index, name in
                 HStack(spacing: 8) {
@@ -169,9 +181,31 @@ struct MacDropView: View {
             }
             .buttonStyle(.link)
         }
-        .toggleStyle(.switch)
         .font(.callout)
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func optionToggle(
+        _ title: String,
+        systemImage: String,
+        isOn: Binding<Bool>,
+        isEnabled: Bool = true
+    ) -> some View {
+        HStack(spacing: 10) {
+            Label(title, systemImage: systemImage)
+                .lineLimit(1)
+
+            Spacer(minLength: 16)
+
+            Toggle(title, isOn: isOn)
+                .labelsHidden()
+                .toggleStyle(.switch)
+                .controlSize(.small)
+                .frame(width: 46, alignment: .trailing)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+        .disabled(!isEnabled)
     }
 
     private func handleDrop(providers: [NSItemProvider]) -> Bool {
