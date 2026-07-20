@@ -124,6 +124,7 @@ struct MacDropView: View {
 }
 
 private extension NSItemProvider {
+    @MainActor
     func fileURL() async -> URL? {
         await withCheckedContinuation { continuation in
             loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { item, _ in
@@ -139,4 +140,3 @@ private extension NSItemProvider {
         }
     }
 }
-

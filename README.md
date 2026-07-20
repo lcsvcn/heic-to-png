@@ -21,7 +21,7 @@ A native Swift workspace for converting HEIC/HEIF images to PNG on macOS and iOS
 
 ## Build
 
-1. Open `HEICToPNG.xcworkspace` in Xcode.
+1. Open `HEICToPNG.xcodeproj` in Xcode.
 2. Select the `HEICToPNGMac` scheme to build the macOS menu-bar app and Finder Quick Action.
 3. Select the `HEICToPNGiOS` scheme to build the iOS app and Share Extension.
 4. In **Signing & Capabilities**, set your Apple Developer Team for every target:
@@ -78,8 +78,35 @@ swift test
 
 The generated-HEIC conversion test automatically skips on systems where HEIC encoding is unavailable.
 
+## Local Build Commands
+
+From the repository root:
+
+```bash
+make test
+make build-macos
+make build-ios
+make run-macos
+make ci
+```
+
+`make package-macos VERSION=1.0.0` creates a Homebrew-ready macOS zip under `.build/release/`.
+
+## CI/CD and Homebrew
+
+GitHub Actions are included:
+
+- `CI`: runs tests and builds macOS plus iOS simulator targets.
+- `Release`: builds a macOS release zip, publishes a GitHub Release, and optionally updates a Homebrew Cask tap.
+
+For Homebrew deployment, configure repository secrets:
+
+- `HOMEBREW_TAP_REPO`, for example `lcsvcn/homebrew-tap`
+- `HOMEBREW_TAP_TOKEN`, with write access to the tap
+
+See `docs/CI_CD.md` for release and tap setup details.
+
 ## Notes
 
 - iPhone screenshots are usually PNG already; camera photos are commonly HEIC unless **Settings → Camera → Formats → Most Compatible** is enabled.
 - Browsers do not allow a general-purpose app to silently replace every selected upload file. The Finder Quick Action, menu-bar app, iOS app, and Share Extension cover the reliable native workflows.
-

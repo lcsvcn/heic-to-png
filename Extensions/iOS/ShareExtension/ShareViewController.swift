@@ -159,6 +159,7 @@ final class ShareViewController: UIViewController {
 }
 
 private extension NSItemProvider {
+    @MainActor
     func loadHEICFileCopy() async -> URL? {
         let supportedType = [UTType.heic.identifier, UTType.heif.identifier, UTType.fileURL.identifier]
             .first { hasItemConformingToTypeIdentifier($0) }
@@ -195,6 +196,7 @@ private extension NSItemProvider {
         }
     }
 
+    @MainActor
     private func loadFileURL() async -> URL? {
         await withCheckedContinuation { continuation in
             loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { item, _ in
@@ -210,4 +212,3 @@ private extension NSItemProvider {
         }
     }
 }
-

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct HEICPNGFilenameResolver {
+public struct HEICPNGFilenameResolver: @unchecked Sendable {
     private let fileManager: FileManager
 
     public init(fileManager: FileManager = .default) {
@@ -41,4 +41,3 @@ public struct HEICPNGFilenameResolver {
         return trimmedName.isEmpty ? "image" : trimmedName
     }
 }
-

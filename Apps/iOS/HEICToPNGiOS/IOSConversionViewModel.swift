@@ -70,7 +70,7 @@ final class IOSConversionViewModel: ObservableObject {
         shareURLs = converted.map(\.outputURL)
     }
 
-    private static func convertedDirectory() throws -> URL {
+    nonisolated private static func convertedDirectory() throws -> URL {
         let documents = try FileManager.default.url(
             for: .documentDirectory,
             in: .userDomainMask,
@@ -82,4 +82,3 @@ final class IOSConversionViewModel: ObservableObject {
         return directory
     }
 }
-

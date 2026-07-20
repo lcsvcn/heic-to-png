@@ -3,7 +3,7 @@ import Foundation
 import ImageIO
 import UniformTypeIdentifiers
 
-public final class HEICPNGConverter {
+public final class HEICPNGConverter: @unchecked Sendable {
     private let fileManager: FileManager
     private let filenameResolver: HEICPNGFilenameResolver
 
@@ -199,4 +199,3 @@ public final class HEICPNGConverter {
         }
     }
 }
-

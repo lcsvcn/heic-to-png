@@ -3,12 +3,16 @@ import Foundation
 import HEICPNGCore
 import UniformTypeIdentifiers
 
-final class FinderActionRequestHandler: NSObject, NSExtensionRequestHandling {
+final class FinderActionRequestHandler: NSObject, NSExtensionRequestHandling, @unchecked Sendable {
     private let converter = HEICPNGConverter()
 
     func beginRequest(with context: NSExtensionContext) {
+        let contextBox = SendableBox(context)
+        let converter = converter
+
         Task {
-            let urls = await fileURLs(from: context.inputItems)
+            let context = contextBox.value
+            let urls = await Self.fileURLs(from: context.inputItems)
             let batch = converter.convert(urls: urls)
 
             if batch.didConvertAnything {
@@ -17,13 +21,13 @@ final class FinderActionRequestHandler: NSObject, NSExtensionRequestHandling {
 
             let response = NSExtensionItem()
             response.attributedTitle = NSAttributedString(string: "Convert HEIC to PNG")
-            response.attributedContentText = NSAttributedString(string: summary(for: batch))
+            response.attributedContentText = NSAttributedString(string: Self.summary(for: batch))
 
             context.completeRequest(returningItems: [response], completionHandler: nil)
         }
     }
 
-    private func summary(for batch: HEICPNGBatchResult) -> String {
+    private static func summary(for batch: HEICPNGBatchResult) -> String {
         if batch.converted.isEmpty && batch.failures.isEmpty {
             return "No HEIC or HEIF files were selected."
         }
@@ -33,7 +37,7 @@ final class FinderActionRequestHandler: NSObject, NSExtensionRequestHandling {
         return [convertedText, failureText].compactMap { $0 }.joined(separator: ", ")
     }
 
-    private func fileURLs(from inputItems: [Any]) async -> [URL] {
+    private static func fileURLs(from inputItems: [Any]) async -> [URL] {
         var urls: [URL] = []
 
         for item in inputItems {
@@ -50,6 +54,14 @@ final class FinderActionRequestHandler: NSObject, NSExtensionRequestHandling {
         }
 
         return urls
+    }
+}
+
+private final class SendableBox<Value>: @unchecked Sendable {
+    let value: Value
+
+    init(_ value: Value) {
+        self.value = value
     }
 }
 
@@ -73,4 +85,3 @@ private extension NSItemProvider {
         }
     }
 }
-
