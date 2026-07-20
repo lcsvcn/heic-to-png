@@ -136,12 +136,14 @@ make ci
 GitHub Actions are included:
 
 - `CI`: runs coverage, builds macOS plus iOS simulator targets, smoke-tests the macOS zip, validates Homebrew cask generation, and runs a Maestro iOS E2E smoke flow.
-- `Release`: runs the coverage/package smoke gates, builds a macOS release zip, publishes a GitHub Release, and optionally updates a Homebrew Cask tap.
+- `CD`: on every pushed `v*` tag, runs the release gates, builds a macOS release zip, publishes a GitHub Release, and updates a Homebrew Cask tap.
 
 For Homebrew deployment, configure repository secrets:
 
 - `HOMEBREW_TAP_REPO`, for example `lcsvcn/homebrew-tap`
-- `HOMEBREW_TAP_TOKEN`, with write access to the tap
+- `HOMEBREW_TAP_DEPLOY_KEY`, with write access to the tap
+
+`HOMEBREW_TAP_TOKEN` is also supported, but a deploy key is preferred because it can be scoped to the tap repository.
 
 See `docs/CI_CD.md` for release and tap setup details.
 

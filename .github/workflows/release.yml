@@ -1,4 +1,4 @@
-name: Release
+name: CD
 
 on:
   push:
@@ -117,6 +117,7 @@ jobs:
     env:
       HOMEBREW_TAP_REPO: ${{ secrets.HOMEBREW_TAP_REPO }}
       HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+      HOMEBREW_TAP_DEPLOY_KEY: ${{ secrets.HOMEBREW_TAP_DEPLOY_KEY }}
 
     steps:
       - name: Check Homebrew tap configuration
@@ -125,21 +126,35 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [[ -z "${HOMEBREW_TAP_REPO}" || -z "${HOMEBREW_TAP_TOKEN}" ]]; then
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "Homebrew tap secrets are not configured; skipping tap update."
+          if [[ -z "${HOMEBREW_TAP_REPO}" ]]; then
+            echo "HOMEBREW_TAP_REPO is required when publishing Homebrew releases." >&2
+            exit 1
+          fi
+
+          if [[ -n "${HOMEBREW_TAP_DEPLOY_KEY}" ]]; then
+            echo "auth_mode=ssh" >> "$GITHUB_OUTPUT"
+          elif [[ -n "${HOMEBREW_TAP_TOKEN}" ]]; then
+            echo "auth_mode=token" >> "$GITHUB_OUTPUT"
           else
-            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "Configure HOMEBREW_TAP_DEPLOY_KEY or HOMEBREW_TAP_TOKEN before publishing Homebrew releases." >&2
+            exit 1
           fi
 
       - name: Check out source repository
-        if: steps.tap-config.outputs.configured == 'true'
         uses: actions/checkout@v6
         with:
           path: source
 
-      - name: Check out Homebrew tap
-        if: steps.tap-config.outputs.configured == 'true'
+      - name: Check out Homebrew tap with deploy key
+        if: steps.tap-config.outputs.auth_mode == 'ssh'
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ env.HOMEBREW_TAP_REPO }}
+          ssh-key: ${{ secrets.HOMEBREW_TAP_DEPLOY_KEY }}
+          path: homebrew-tap
+
+      - name: Check out Homebrew tap with token
+        if: steps.tap-config.outputs.auth_mode == 'token'
         uses: actions/checkout@v6
         with:
           repository: ${{ env.HOMEBREW_TAP_REPO }}
@@ -147,7 +162,6 @@ jobs:
           path: homebrew-tap
 
       - name: Update cask
-        if: steps.tap-config.outputs.configured == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -160,7 +174,6 @@ jobs:
             "https://github.com/${GITHUB_REPOSITORY}"
 
       - name: Commit and push tap update
-        if: steps.tap-config.outputs.configured == 'true'
         shell: bash
         run: |
           set -euo pipefail

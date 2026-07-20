@@ -57,7 +57,7 @@ When the app is running, the PNG should appear beside the HEIC file in Downloads
 - `Unit, Coverage, Build, Package`: enforces converter coverage, builds the macOS app plus Finder Quick Action, builds the iOS simulator app plus Share Extension, validates the Automator Finder Quick Action workflow, smoke-tests Homebrew cask generation, and smoke-tests the macOS zip artifact.
 - `iOS Maestro E2E`: installs the free local Maestro CLI, builds the iOS Simulator app, installs it on a simulator, and runs the `.maestro/ios-smoke.yaml` flow.
 
-`Release` runs when you push a tag like `v1.0.0`, or manually from GitHub Actions. It runs the coverage and deployment smoke gates, builds a macOS release zip, creates or updates a GitHub Release, uploads the zip and checksum, and can update a Homebrew tap.
+`CD` runs when you push a tag like `v1.0.0`, or manually from GitHub Actions. It runs the coverage and deployment smoke gates, builds a macOS release zip, creates or updates a GitHub Release, uploads the zip and checksum, and updates the configured Homebrew tap. Tag-triggered runs require Homebrew tap credentials so a tagged release cannot silently skip Homebrew publishing.
 
 ## No-cost deployment model
 
@@ -67,7 +67,7 @@ The free path is:
 
 1. GitHub Actions builds `HEICToPNG.app`.
 2. GitHub Releases hosts `HEICToPNG-<version>.zip` and its SHA-256 checksum. The zip contains `HEICToPNG.app` and the no-cost Automator Finder Quick Action workflow.
-3. The optional Homebrew tap job updates a cask that installs the app into `/Applications` and the workflow into `~/Library/Services`.
+3. The Homebrew tap job updates a cask that installs the app into `/Applications` and the workflow into `~/Library/Services`.
 
 Tradeoff: without Developer ID signing and notarization, macOS may show Gatekeeper warnings on first launch. A smoother “identified developer” install requires Developer ID signing and notarization, which requires Apple Developer Program membership.
 
@@ -75,10 +75,12 @@ The iOS app and Share Extension are buildable from source, but broad iOS distrib
 
 ## Homebrew tap deployment
 
-The release workflow updates Homebrew only when these repository secrets are configured:
+The CD workflow updates Homebrew for every pushed `v*` tag when these repository secrets are configured:
 
 - `HOMEBREW_TAP_REPO`: the tap repository, for example `lcsvcn/homebrew-tap`.
-- `HOMEBREW_TAP_TOKEN`: a GitHub token with write access to that tap repository.
+- `HOMEBREW_TAP_DEPLOY_KEY`: a private SSH deploy key with write access to the tap repository. This is preferred because the key is scoped to the tap repo.
+
+Alternatively, use `HOMEBREW_TAP_TOKEN` with write access to the tap repository.
 
 The workflow writes this cask file in the tap:
 
@@ -93,7 +95,7 @@ brew tap lcsvcn/tap
 brew install --cask heic-to-png
 ```
 
-If the tap secrets are missing, release still succeeds and the Homebrew update step is skipped.
+If the tap secrets are missing, tag-triggered CD fails after publishing the GitHub Release. Manual CD runs only update Homebrew when `publish_homebrew` is selected.
 
 Because this app repository is private, Homebrew installs will need authenticated access to the GitHub release asset. For a public one-command install, publish release artifacts from a public repository or another public download location.
 
@@ -115,5 +117,5 @@ For the macOS app target, keep these sandbox capabilities enabled:
    git push origin v1.0.0
    ```
 
-3. The release workflow publishes `HEICToPNG-1.0.0.zip`.
-4. If Homebrew tap secrets are configured, the workflow updates the tap cask with the new URL and SHA-256.
+3. The CD workflow publishes `HEICToPNG-1.0.0.zip`.
+4. The CD workflow updates the tap cask with the new URL and SHA-256.

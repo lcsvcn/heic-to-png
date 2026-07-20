@@ -27,6 +27,11 @@ cask "heic-to-png" do
   desc "Native HEIC and HEIF to PNG converter for macOS"
   homepage "${repository_url}"
 
+  livecheck do
+    url :url
+    strategy :github_latest
+  end
+
   depends_on macos: ">= :ventura"
 
   app "HEICToPNG.app"
