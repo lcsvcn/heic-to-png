@@ -36,13 +36,12 @@ A native Swift workspace for converting HEIC/HEIF images to PNG on macOS and iOS
 ### Menu-Bar App
 
 1. Build and run `HEICToPNGMac`.
-2. Click the menu-bar icon to open the settings window.
-3. Keep **Auto-convert** enabled for automatic PNG creation.
-4. Keep **AirDrop / Downloads** and **Desktop / Screenshots** enabled for the default watch locations.
-5. Use **Watch Folder** for any other screenshot, export, or sync folder.
+2. Click the menu-bar icon to open the compact dropdown.
+3. Use the dropdown only for quick toggles: auto-convert, watched default folders, Finder Quick Action, reveal, and copy.
+4. Choose **Open App** from the dropdown for larger actions.
+5. In the full app window, use **Watch Folder** for any other screenshot, export, or sync folder.
 6. Use **Convert Files** or **Convert Folder** for older HEIC/HEIF images.
 7. Use **See Logs** to open conversion history and settings-change logs in a separate app window.
-8. Use the Finder **Quick Action** toggle to enable or disable the Finder menu action.
 
 ### Automatic AirDrop and Screenshot Conversion
 
