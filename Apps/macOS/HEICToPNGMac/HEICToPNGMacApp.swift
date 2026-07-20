@@ -72,8 +72,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             .fullSizeContentView
         ]
         window.isReleasedWhenClosed = false
-        window.setContentSize(NSSize(width: 430, height: 520))
-        window.minSize = NSSize(width: 410, height: 500)
+        window.setContentSize(NSSize(width: 560, height: 680))
+        window.minSize = NSSize(width: 520, height: 640)
         window.center()
 
         return NSWindowController(window: window)
@@ -263,8 +263,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
 @MainActor
 private final class StatusMenuCheckboxView: NSView {
-    private let checkbox: NSButton
+    private let glyphView = StatusMenuCheckboxGlyphView()
+    private let titleLabel = NSTextField(labelWithString: "")
     private let onChange: @MainActor (Bool) -> Void
+    private var isOn: Bool
+    private var itemIsEnabled: Bool
 
     init(
         title: String,
@@ -272,25 +275,32 @@ private final class StatusMenuCheckboxView: NSView {
         isEnabled: Bool,
         onChange: @escaping @MainActor (Bool) -> Void
     ) {
-        self.checkbox = NSButton(checkboxWithTitle: title, target: nil, action: nil)
+        self.isOn = isOn
+        self.itemIsEnabled = isEnabled
         self.onChange = onChange
 
-        super.init(frame: NSRect(x: 0, y: 0, width: 260, height: 30))
+        super.init(frame: NSRect(x: 0, y: 0, width: 278, height: 32))
 
-        checkbox.target = self
-        checkbox.action = #selector(toggleCheckbox(_:))
-        checkbox.font = NSFont.menuFont(ofSize: 0)
-        checkbox.controlSize = .regular
-        checkbox.state = isOn ? .on : .off
-        checkbox.isEnabled = isEnabled
-        checkbox.translatesAutoresizingMaskIntoConstraints = false
+        glyphView.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.stringValue = title
+        titleLabel.font = NSFont.menuFont(ofSize: 0)
+        titleLabel.lineBreakMode = .byTruncatingTail
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        addSubview(checkbox)
+        addSubview(glyphView)
+        addSubview(titleLabel)
         NSLayoutConstraint.activate([
-            checkbox.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
-            checkbox.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -12),
-            checkbox.centerYAnchor.constraint(equalTo: centerYAnchor)
+            glyphView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
+            glyphView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            glyphView.widthAnchor.constraint(equalToConstant: 22),
+            glyphView.heightAnchor.constraint(equalToConstant: 22),
+
+            titleLabel.leadingAnchor.constraint(equalTo: glyphView.trailingAnchor, constant: 10),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -12),
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
+
+        update(isOn: isOn, isEnabled: isEnabled)
     }
 
     @available(*, unavailable)
@@ -299,11 +309,64 @@ private final class StatusMenuCheckboxView: NSView {
     }
 
     func update(isOn: Bool, isEnabled: Bool = true) {
-        checkbox.state = isOn ? .on : .off
-        checkbox.isEnabled = isEnabled
+        self.isOn = isOn
+        itemIsEnabled = isEnabled
+        glyphView.update(isOn: isOn, isEnabled: isEnabled)
+        titleLabel.textColor = isEnabled ? .labelColor : .disabledControlTextColor
     }
 
-    @objc private func toggleCheckbox(_ sender: NSButton) {
-        onChange(sender.state == .on)
+    override func mouseDown(with event: NSEvent) {
+        guard itemIsEnabled else {
+            return
+        }
+
+        let newValue = !isOn
+        update(isOn: newValue, isEnabled: itemIsEnabled)
+        onChange(newValue)
+    }
+}
+
+@MainActor
+private final class StatusMenuCheckboxGlyphView: NSView {
+    private let checkmarkView = NSImageView()
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+
+        wantsLayer = true
+        layer?.cornerRadius = 6
+
+        checkmarkView.image = NSImage(
+            systemSymbolName: "checkmark",
+            accessibilityDescription: nil
+        )
+        checkmarkView.symbolConfiguration = NSImage.SymbolConfiguration(
+            pointSize: 14,
+            weight: .bold
+        )
+        checkmarkView.contentTintColor = .white
+        checkmarkView.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(checkmarkView)
+        NSLayoutConstraint.activate([
+            checkmarkView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            checkmarkView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            checkmarkView.widthAnchor.constraint(equalToConstant: 15),
+            checkmarkView.heightAnchor.constraint(equalToConstant: 15)
+        ])
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        nil
+    }
+
+    func update(isOn: Bool, isEnabled: Bool) {
+        let enabledAlpha: CGFloat = isEnabled ? 1 : 0.45
+        layer?.backgroundColor = isOn
+            ? NSColor.systemBlue.withAlphaComponent(enabledAlpha).cgColor
+            : NSColor.tertiaryLabelColor.withAlphaComponent(0.36).cgColor
+        checkmarkView.isHidden = !isOn
+        checkmarkView.alphaValue = enabledAlpha
     }
 }
