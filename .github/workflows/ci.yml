@@ -7,6 +7,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -14,6 +18,7 @@ jobs:
   quality:
     name: Unit, Coverage, Build, Package
     runs-on: macos-latest
+    timeout-minutes: 20
 
     steps:
       - name: Check out repository
@@ -46,6 +51,7 @@ jobs:
     name: iOS Maestro E2E
     runs-on: macos-latest
     needs: quality
+    timeout-minutes: 20
 
     steps:
       - name: Check out repository
@@ -61,6 +67,7 @@ jobs:
         run: scripts/install-maestro.sh
 
       - name: Run iOS Maestro smoke flow
+        timeout-minutes: 12
         run: make test-e2e-ios
 
       - name: Upload Maestro report

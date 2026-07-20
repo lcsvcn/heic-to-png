@@ -22,7 +22,7 @@ The build commands use `HEICToPNG.xcodeproj` directly and keep build output unde
 
 `make coverage` runs the shared converter package tests with SwiftPM coverage enabled and enforces `COVERAGE_MIN`, which defaults to 80 percent line coverage.
 
-`make test-e2e-ios` builds the iOS Simulator app and runs the Maestro flow in `.maestro/ios-smoke.yaml`. Maestro applies to the iOS app because it is a mobile UI automation tool. It is not used for the macOS menu-bar app or Finder Quick Action.
+`make test-e2e-ios` builds the iOS Simulator app and runs the Maestro flow in `.maestro/ios-smoke.yaml`. The runner targets one exact simulator UDID, uses bounded waits for boot/install/test steps, and writes reports under `.build/maestro/`. Maestro applies to the iOS app because it is a mobile UI automation tool. It is not used for the macOS menu-bar app or Finder Quick Action.
 
 Install Maestro locally with:
 
@@ -50,7 +50,7 @@ When the app is running, the PNG should appear beside the HEIC file in Downloads
 
 ## GitHub Actions
 
-`CI` runs on pushes to `main`, pull requests, and manual dispatch. It has two jobs:
+`CI` runs on pushes to `main`, pull requests, and manual dispatch. New pushes cancel older in-progress runs for the same branch so stuck simulator jobs do not pile up. It has two jobs:
 
 - `Unit, Coverage, Build, Package`: enforces converter coverage, builds the macOS app plus Finder Quick Action, builds the iOS simulator app plus Share Extension, smoke-tests Homebrew cask generation, and smoke-tests the macOS zip artifact.
 - `iOS Maestro E2E`: installs the free local Maestro CLI, builds the iOS Simulator app, installs it on a simulator, and runs the `.maestro/ios-smoke.yaml` flow.
