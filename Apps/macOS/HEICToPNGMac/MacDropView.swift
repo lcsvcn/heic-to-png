@@ -51,7 +51,7 @@ struct MacDropView: View {
             resultList
         }
         .padding(18)
-        .frame(minWidth: 360, minHeight: 540)
+        .frame(minWidth: 390, minHeight: 650)
     }
 
     private var dropZone: some View {
@@ -121,6 +121,46 @@ struct MacDropView: View {
             Toggle(isOn: $viewModel.autoCopyConvertedFiles) {
                 Label("Copy after converting", systemImage: "doc.on.doc")
             }
+
+            Divider()
+
+            Toggle(isOn: $viewModel.autoConvertNewHEICFiles) {
+                Label("Auto-convert new HEIC files", systemImage: "bolt.circle")
+            }
+
+            Toggle(isOn: $viewModel.autoWatchDownloadsFolder) {
+                Label("AirDrop / Downloads", systemImage: "arrow.down.circle")
+            }
+            .disabled(!viewModel.autoConvertNewHEICFiles)
+
+            Toggle(isOn: $viewModel.autoWatchDesktopFolder) {
+                Label("Desktop / Screenshots", systemImage: "camera.viewfinder")
+            }
+            .disabled(!viewModel.autoConvertNewHEICFiles)
+
+            ForEach(Array(viewModel.customWatchedFolderNames.enumerated()), id: \.offset) { index, name in
+                HStack(spacing: 8) {
+                    Label(name, systemImage: "folder")
+                        .lineLimit(1)
+                    Spacer()
+                    Button {
+                        viewModel.removeWatchedFolder(at: index)
+                    } label: {
+                        Image(systemName: "minus.circle")
+                    }
+                    .buttonStyle(.borderless)
+                    .help("Remove watched folder")
+                }
+                .disabled(!viewModel.autoConvertNewHEICFiles)
+            }
+
+            Button {
+                viewModel.chooseWatchedFolder()
+            } label: {
+                Label("Add Folder", systemImage: "folder.badge.plus")
+            }
+            .buttonStyle(.link)
+            .disabled(!viewModel.autoConvertNewHEICFiles)
 
             Button {
                 viewModel.openExtensionSettings()

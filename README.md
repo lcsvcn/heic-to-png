@@ -4,13 +4,13 @@ A native Swift workspace for converting HEIC/HEIF images to PNG on macOS and iOS
 
 ## What is included
 
-- macOS menu-bar app with drag-and-drop conversion.
+- macOS menu-bar app with drag-and-drop and automatic watched-folder conversion.
 - Finder Quick Action named **Convert HEIC to PNG**.
 - iOS SwiftUI app with file import, copy, and share actions.
 - iOS Share Extension for Photos and Files.
 - Shared `HEICPNGCore` Swift package using ImageIO, Core Graphics, and UniformTypeIdentifiers.
 - Multi-file conversion, original-file preservation, orientation rendering, and safe numbered output filenames.
-- Unit tests for type detection, filename collision handling, unsupported inputs, and PNG conversion where system HEIC encoding is available.
+- Unit tests for type detection, filename collision handling, unsupported inputs, alpha preservation, orientation handling, corrupt inputs, and PNG conversion where system HEIC encoding is available.
 
 ## Requirements
 
@@ -41,7 +41,22 @@ A native Swift workspace for converting HEIC/HEIF images to PNG on macOS and iOS
 4. Converted PNG files are saved beside the originals.
 5. Use **Copy** to copy converted PNG files to the clipboard.
 6. Use **Reveal** to show the converted files in Finder.
-7. Use the toggles to customize Finder Quick Action conversion, automatic reveal, and automatic copy behavior.
+7. Use the toggles to customize Finder Quick Action conversion, automatic reveal, automatic copy, and watched-folder conversion behavior.
+
+### Automatic AirDrop and Screenshot Conversion
+
+When the macOS app is running, **Auto-convert new HEIC files** is enabled by default.
+
+Default watched folders:
+
+- **AirDrop / Downloads**: new `.heic` or `.heif` files in Downloads are converted to PNG beside the original.
+- **Desktop / Screenshots**: new `.heic` or `.heif` files on the Desktop are converted to PNG beside the original.
+
+Use **Add Folder** to watch another screenshot/export folder. This is useful if macOS screenshots or image exports are saved somewhere other than Desktop.
+
+The watcher preserves the original HEIC/HEIF file. It skips files that already have a same-name `.png` beside them, so repeated folder scans do not create endless numbered duplicates.
+
+The app cannot intercept AirDrop before macOS writes the received file. It watches the destination folder and creates the PNG immediately after the file appears and is readable.
 
 ### Finder Quick Action
 
@@ -61,6 +76,8 @@ To share settings between the macOS app and Finder Quick Action, configure the A
 - `FinderQuickAction`
 
 Ad-hoc Debug builds can run the menu-bar app and convert files locally, but Finder Quick Action discovery requires a signed app install.
+
+For signed sandboxed builds, keep Downloads Folder set to Read/Write and App-Scoped Bookmarks enabled on the macOS app target. Downloads access supports AirDrop conversion; bookmarks support user-added watched folders.
 
 ## iOS Usage
 

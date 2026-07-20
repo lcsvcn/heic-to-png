@@ -25,6 +25,15 @@ open -a "$(pwd)/.build/DerivedData/Build/Products/Debug/HEICToPNG.app" path/to/p
 
 The PNG is written beside the HEIC file.
 
+For a local smoke test of automatic AirDrop-style conversion:
+
+```bash
+make run-macos
+cp path/to/photo.heic ~/Downloads/HEICToPNG-AutoWatch-Test.heic
+```
+
+When the app is running, the PNG should appear beside the HEIC file in Downloads.
+
 ## GitHub Actions
 
 `CI` runs on pushes to `main`, pull requests, and manual dispatch. It runs the unit tests, builds the macOS app plus Finder Quick Action, and builds the iOS simulator app plus Share Extension.
@@ -56,6 +65,12 @@ If the tap secrets are missing, release still succeeds and the Homebrew update s
 Because this app repository is private, Homebrew installs will need authenticated access to the GitHub release asset. For a public one-command install, publish release artifacts from a public repository or another public download location.
 
 For signed macOS builds, enable the App Group `group.com.lcsvcn.HEICToPNG` on both macOS targets so the app settings and Finder Quick Action settings stay in sync.
+
+For the macOS app target, keep these sandbox capabilities enabled:
+
+- Downloads Folder: Read/Write, for AirDrop and Downloads auto-conversion.
+- User Selected File: Read/Write, for manually selected files and folders.
+- App-Scoped Bookmarks, for persisted custom watched folders.
 
 ## Release steps
 
