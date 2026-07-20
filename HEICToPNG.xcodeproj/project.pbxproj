@@ -1,0 +1,825 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		210000000000000000000001 /* HEICToPNGMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000000000000000000001 /* HEICToPNGMacApp.swift */; };
+		210000000000000000000002 /* MacConversionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000000000000000000002 /* MacConversionViewModel.swift */; };
+		210000000000000000000003 /* MacDropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000000000000000000003 /* MacDropView.swift */; };
+		210000000000000000000004 /* HEICPNGCore in Frameworks */ = {isa = PBXBuildFile; productRef = 900000000000000000000002 /* HEICPNGCore */; };
+		220000000000000000000001 /* FinderActionRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120000000000000000000001 /* FinderActionRequestHandler.swift */; };
+		220000000000000000000002 /* HEICPNGCore in Frameworks */ = {isa = PBXBuildFile; productRef = 900000000000000000000002 /* HEICPNGCore */; };
+		230000000000000000000001 /* HEICToPNGiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130000000000000000000001 /* HEICToPNGiOSApp.swift */; };
+		230000000000000000000002 /* IOSConversionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130000000000000000000002 /* IOSConversionViewModel.swift */; };
+		230000000000000000000003 /* IOSConversionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130000000000000000000003 /* IOSConversionView.swift */; };
+		230000000000000000000004 /* HEICPNGCore in Frameworks */ = {isa = PBXBuildFile; productRef = 900000000000000000000002 /* HEICPNGCore */; };
+		240000000000000000000001 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140000000000000000000001 /* ShareViewController.swift */; };
+		240000000000000000000002 /* HEICPNGCore in Frameworks */ = {isa = PBXBuildFile; productRef = 900000000000000000000002 /* HEICPNGCore */; };
+		250000000000000000000001 /* FinderQuickAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 100000000000000000000002 /* FinderQuickAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		250000000000000000000002 /* HEICShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 100000000000000000000004 /* HEICShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		500000000000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 400000000000000000000002;
+			remoteInfo = FinderQuickAction;
+		};
+		500000000000000000000004 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 400000000000000000000004;
+			remoteInfo = HEICShareExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		310000000000000000000004 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				250000000000000000000001 /* FinderQuickAction.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		330000000000000000000004 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				250000000000000000000002 /* HEICShareExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		100000000000000000000001 /* HEICToPNG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HEICToPNG.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		100000000000000000000002 /* FinderQuickAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FinderQuickAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		100000000000000000000003 /* HEICToPNGiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HEICToPNGiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		100000000000000000000004 /* HEICShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HEICShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		110000000000000000000001 /* HEICToPNGMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HEICToPNGMacApp.swift; sourceTree = "<group>"; };
+		110000000000000000000002 /* MacConversionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacConversionViewModel.swift; sourceTree = "<group>"; };
+		110000000000000000000003 /* MacDropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacDropView.swift; sourceTree = "<group>"; };
+		110000000000000000000004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		110000000000000000000005 /* HEICToPNGMac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HEICToPNGMac.entitlements; sourceTree = "<group>"; };
+		120000000000000000000001 /* FinderActionRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinderActionRequestHandler.swift; sourceTree = "<group>"; };
+		120000000000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		120000000000000000000003 /* FinderQuickAction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FinderQuickAction.entitlements; sourceTree = "<group>"; };
+		130000000000000000000001 /* HEICToPNGiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HEICToPNGiOSApp.swift; sourceTree = "<group>"; };
+		130000000000000000000002 /* IOSConversionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSConversionViewModel.swift; sourceTree = "<group>"; };
+		130000000000000000000003 /* IOSConversionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSConversionView.swift; sourceTree = "<group>"; };
+		130000000000000000000004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		140000000000000000000001 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		140000000000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		310000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				210000000000000000000004 /* HEICPNGCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		320000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				220000000000000000000002 /* HEICPNGCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		330000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				230000000000000000000004 /* HEICPNGCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		340000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				240000000000000000000002 /* HEICPNGCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		000000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000004 /* Apps */,
+				000000000000000000000005 /* Extensions */,
+				000000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		000000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000001 /* HEICToPNG.app */,
+				100000000000000000000002 /* FinderQuickAction.appex */,
+				100000000000000000000003 /* HEICToPNGiOS.app */,
+				100000000000000000000004 /* HEICShareExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		000000000000000000000004 /* Apps */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000006 /* HEICToPNGMac */,
+				000000000000000000000007 /* HEICToPNGiOS */,
+			);
+			name = Apps;
+			sourceTree = "<group>";
+		};
+		000000000000000000000005 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000008 /* FinderQuickAction */,
+				000000000000000000000009 /* ShareExtension */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		000000000000000000000006 /* HEICToPNGMac */ = {
+			isa = PBXGroup;
+			children = (
+				110000000000000000000001 /* HEICToPNGMacApp.swift */,
+				110000000000000000000002 /* MacConversionViewModel.swift */,
+				110000000000000000000003 /* MacDropView.swift */,
+				110000000000000000000004 /* Info.plist */,
+				110000000000000000000005 /* HEICToPNGMac.entitlements */,
+			);
+			path = Apps/macOS/HEICToPNGMac;
+			sourceTree = "<group>";
+		};
+		000000000000000000000007 /* HEICToPNGiOS */ = {
+			isa = PBXGroup;
+			children = (
+				130000000000000000000001 /* HEICToPNGiOSApp.swift */,
+				130000000000000000000002 /* IOSConversionViewModel.swift */,
+				130000000000000000000003 /* IOSConversionView.swift */,
+				130000000000000000000004 /* Info.plist */,
+			);
+			path = Apps/iOS/HEICToPNGiOS;
+			sourceTree = "<group>";
+		};
+		000000000000000000000008 /* FinderQuickAction */ = {
+			isa = PBXGroup;
+			children = (
+				120000000000000000000001 /* FinderActionRequestHandler.swift */,
+				120000000000000000000002 /* Info.plist */,
+				120000000000000000000003 /* FinderQuickAction.entitlements */,
+			);
+			path = Extensions/macOS/FinderQuickAction;
+			sourceTree = "<group>";
+		};
+		000000000000000000000009 /* ShareExtension */ = {
+			isa = PBXGroup;
+			children = (
+				140000000000000000000001 /* ShareViewController.swift */,
+				140000000000000000000002 /* Info.plist */,
+			);
+			path = Extensions/iOS/ShareExtension;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		400000000000000000000001 /* HEICToPNGMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 610000000000000000000001 /* Build configuration list for PBXNativeTarget "HEICToPNGMac" */;
+			buildPhases = (
+				310000000000000000000001 /* Sources */,
+				310000000000000000000002 /* Frameworks */,
+				310000000000000000000003 /* Resources */,
+				310000000000000000000004 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				500000000000000000000001 /* PBXTargetDependency */,
+			);
+			name = HEICToPNGMac;
+			packageProductDependencies = (
+				900000000000000000000002 /* HEICPNGCore */,
+			);
+			productName = HEICToPNGMac;
+			productReference = 100000000000000000000001 /* HEICToPNG.app */;
+			productType = "com.apple.product-type.application";
+		};
+		400000000000000000000002 /* FinderQuickAction */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 620000000000000000000001 /* Build configuration list for PBXNativeTarget "FinderQuickAction" */;
+			buildPhases = (
+				320000000000000000000001 /* Sources */,
+				320000000000000000000002 /* Frameworks */,
+				320000000000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FinderQuickAction;
+			packageProductDependencies = (
+				900000000000000000000002 /* HEICPNGCore */,
+			);
+			productName = FinderQuickAction;
+			productReference = 100000000000000000000002 /* FinderQuickAction.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		400000000000000000000003 /* HEICToPNGiOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 630000000000000000000001 /* Build configuration list for PBXNativeTarget "HEICToPNGiOS" */;
+			buildPhases = (
+				330000000000000000000001 /* Sources */,
+				330000000000000000000002 /* Frameworks */,
+				330000000000000000000003 /* Resources */,
+				330000000000000000000004 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				500000000000000000000003 /* PBXTargetDependency */,
+			);
+			name = HEICToPNGiOS;
+			packageProductDependencies = (
+				900000000000000000000002 /* HEICPNGCore */,
+			);
+			productName = HEICToPNGiOS;
+			productReference = 100000000000000000000003 /* HEICToPNGiOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		400000000000000000000004 /* HEICShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 640000000000000000000001 /* Build configuration list for PBXNativeTarget "HEICShareExtension" */;
+			buildPhases = (
+				340000000000000000000001 /* Sources */,
+				340000000000000000000002 /* Frameworks */,
+				340000000000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HEICShareExtension;
+			packageProductDependencies = (
+				900000000000000000000002 /* HEICPNGCore */,
+			);
+			productName = HEICShareExtension;
+			productReference = 100000000000000000000004 /* HEICShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		000000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					400000000000000000000001 = {
+						CreatedOnToolsVersion = 16.0;
+						ProvisioningStyle = Automatic;
+					};
+					400000000000000000000002 = {
+						CreatedOnToolsVersion = 16.0;
+						ProvisioningStyle = Automatic;
+					};
+					400000000000000000000003 = {
+						CreatedOnToolsVersion = 16.0;
+						ProvisioningStyle = Automatic;
+					};
+					400000000000000000000004 = {
+						CreatedOnToolsVersion = 16.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 600000000000000000000001 /* Build configuration list for PBXProject "HEICToPNG" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 000000000000000000000002;
+			packageReferences = (
+				900000000000000000000001 /* XCLocalSwiftPackageReference "HEICPNGCore" */,
+			);
+			productRefGroup = 000000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				400000000000000000000001 /* HEICToPNGMac */,
+				400000000000000000000002 /* FinderQuickAction */,
+				400000000000000000000003 /* HEICToPNGiOS */,
+				400000000000000000000004 /* HEICShareExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		310000000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		320000000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		330000000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		340000000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		310000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				210000000000000000000001 /* HEICToPNGMacApp.swift in Sources */,
+				210000000000000000000002 /* MacConversionViewModel.swift in Sources */,
+				210000000000000000000003 /* MacDropView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		320000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				220000000000000000000001 /* FinderActionRequestHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		330000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				230000000000000000000001 /* HEICToPNGiOSApp.swift in Sources */,
+				230000000000000000000002 /* IOSConversionViewModel.swift in Sources */,
+				230000000000000000000003 /* IOSConversionView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		340000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				240000000000000000000001 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		500000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 400000000000000000000002 /* FinderQuickAction */;
+			targetProxy = 500000000000000000000002 /* PBXContainerItemProxy */;
+		};
+		500000000000000000000003 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 400000000000000000000004 /* HEICShareExtension */;
+			targetProxy = 500000000000000000000004 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		600000000000000000000002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = auto;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		600000000000000000000003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = auto;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		610000000000000000000002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Apps/macOS/HEICToPNGMac/HEICToPNGMac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Apps/macOS/HEICToPNGMac/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lcsvcn.HEICToPNG.mac;
+				PRODUCT_NAME = HEICToPNG;
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		610000000000000000000003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Apps/macOS/HEICToPNGMac/HEICToPNGMac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Apps/macOS/HEICToPNGMac/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lcsvcn.HEICToPNG.mac;
+				PRODUCT_NAME = HEICToPNG;
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		620000000000000000000002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Extensions/macOS/FinderQuickAction/FinderQuickAction.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Extensions/macOS/FinderQuickAction/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lcsvcn.HEICToPNG.mac.FinderQuickAction;
+				PRODUCT_NAME = FinderQuickAction;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				WRAPPER_EXTENSION = appex;
+			};
+			name = Debug;
+		};
+		620000000000000000000003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Extensions/macOS/FinderQuickAction/FinderQuickAction.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Extensions/macOS/FinderQuickAction/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lcsvcn.HEICToPNG.mac.FinderQuickAction;
+				PRODUCT_NAME = FinderQuickAction;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				WRAPPER_EXTENSION = appex;
+			};
+			name = Release;
+		};
+		630000000000000000000002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Apps/iOS/HEICToPNGiOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lcsvcn.HEICToPNG.iOS;
+				PRODUCT_NAME = HEICToPNGiOS;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		630000000000000000000003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Apps/iOS/HEICToPNGiOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lcsvcn.HEICToPNG.iOS;
+				PRODUCT_NAME = HEICToPNGiOS;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		640000000000000000000002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Extensions/iOS/ShareExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lcsvcn.HEICToPNG.iOS.ShareExtension;
+				PRODUCT_NAME = HEICShareExtension;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = appex;
+			};
+			name = Debug;
+		};
+		640000000000000000000003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Extensions/iOS/ShareExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lcsvcn.HEICToPNG.iOS.ShareExtension;
+				PRODUCT_NAME = HEICShareExtension;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = appex;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		600000000000000000000001 /* Build configuration list for PBXProject "HEICToPNG" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				600000000000000000000002 /* Debug */,
+				600000000000000000000003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		610000000000000000000001 /* Build configuration list for PBXNativeTarget "HEICToPNGMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				610000000000000000000002 /* Debug */,
+				610000000000000000000003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		620000000000000000000001 /* Build configuration list for PBXNativeTarget "FinderQuickAction" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				620000000000000000000002 /* Debug */,
+				620000000000000000000003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		630000000000000000000001 /* Build configuration list for PBXNativeTarget "HEICToPNGiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				630000000000000000000002 /* Debug */,
+				630000000000000000000003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		640000000000000000000001 /* Build configuration list for PBXNativeTarget "HEICShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				640000000000000000000002 /* Debug */,
+				640000000000000000000003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		900000000000000000000001 /* XCLocalSwiftPackageReference "HEICPNGCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/HEICPNGCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		900000000000000000000002 /* HEICPNGCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 900000000000000000000001 /* XCLocalSwiftPackageReference "HEICPNGCore" */;
+			productName = HEICPNGCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 000000000000000000000001 /* Project object */;
+}
+
