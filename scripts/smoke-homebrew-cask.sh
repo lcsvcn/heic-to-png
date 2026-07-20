@@ -14,4 +14,6 @@ trap 'rm -rf "$tmp_dir"' EXIT
 cask_path="$tmp_dir/Casks/heic-to-png.rb"
 ruby -c "$cask_path"
 grep -q 'app "HEICToPNG.app"' "$cask_path"
+grep -q 'artifact "Convert HEIC to PNG.workflow"' "$cask_path"
+grep -q '/System/Library/CoreServices/pbs' "$cask_path"
 grep -q 'Convert HEIC to PNG' "$cask_path"

@@ -17,14 +17,20 @@ ditto -x -k "$artifact" "$tmp_dir"
 
 app="$tmp_dir/HEICToPNG.app"
 quick_action="$app/Contents/PlugIns/FinderQuickAction.appex"
+workflow="$tmp_dir/Convert HEIC to PNG.workflow"
 
 test -d "$app"
 test -d "$quick_action"
+test -d "$workflow"
 
 mac_bundle_id="$(plutil -extract CFBundleIdentifier raw -o - "$app/Contents/Info.plist")"
 action_bundle_id="$(plutil -extract CFBundleIdentifier raw -o - "$quick_action/Contents/Info.plist")"
 action_name="$(plutil -extract CFBundleDisplayName raw -o - "$quick_action/Contents/Info.plist")"
+workflow_bundle_id="$(plutil -extract CFBundleIdentifier raw -o - "$workflow/Contents/Info.plist")"
+workflow_name="$(plutil -extract CFBundleName raw -o - "$workflow/Contents/Info.plist")"
 
 test "$mac_bundle_id" = "com.lcsvcn.HEICToPNG.mac"
 test "$action_bundle_id" = "com.lcsvcn.HEICToPNG.mac.FinderQuickAction"
 test "$action_name" = "Convert HEIC to PNG"
+test "$workflow_bundle_id" = "com.lcsvcn.HEICToPNG.quickaction.workflow"
+test "$workflow_name" = "Convert HEIC to PNG"

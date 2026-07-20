@@ -30,11 +30,21 @@ cask "heic-to-png" do
   depends_on macos: ">= :ventura"
 
   app "HEICToPNG.app"
+  artifact "Convert HEIC to PNG.workflow",
+           target: "#{Dir.home}/Library/Services/Convert HEIC to PNG.workflow"
+
+  postflight do
+    system_command "/System/Library/CoreServices/pbs",
+                   args: ["-flush"],
+                   sudo: false
+  end
 
   caveats do
     <<~EOS
-      Launch HEIC to PNG once, then enable the Finder Quick Action:
-      System Settings > Privacy & Security > Extensions > Finder > Convert HEIC to PNG
+      The Homebrew cask installs the no-cost Finder Quick Action:
+      Finder > right-click a HEIC/HEIF file > Quick Actions > Convert HEIC to PNG
+
+      If Finder was already open and the action is not visible yet, relaunch Finder.
 
       This no-cost build is not notarized. If macOS blocks first launch,
       Control-click the app in Finder and choose Open.
@@ -44,6 +54,7 @@ cask "heic-to-png" do
   zap trash: [
     "~/Library/Containers/com.lcsvcn.HEICToPNG.mac",
     "~/Library/Preferences/com.lcsvcn.HEICToPNG.mac.plist",
+    "~/Library/Services/Convert HEIC to PNG.workflow",
   ]
 end
 RUBY

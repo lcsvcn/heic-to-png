@@ -60,13 +60,21 @@ The app cannot intercept AirDrop before macOS writes the received file. It watch
 
 ### Finder Quick Action
 
+For the no-cost local Finder menu, install the bundled Automator Quick Action:
+
+```bash
+make install-finder-quick-action
+```
+
+Then select one or more HEIC/HEIF files in Finder and choose **Quick Actions → Convert HEIC to PNG**.
+
+The app also contains a native Action Extension for signed app builds:
+
 1. Build and run or archive the macOS app once so the embedded extension is registered.
 2. Open **System Settings → Privacy & Security → Extensions → Finder**.
 3. Enable **Convert HEIC to PNG**.
-4. In Finder, select one or more HEIC/HEIF files.
-5. Right-click and choose **Quick Actions → Convert HEIC to PNG**.
 
-The Quick Action preserves the original images, writes PNG files beside them, avoids overwrites with numbered filenames, and reveals successful conversions in Finder.
+Both Quick Action paths preserve the original images, write PNG files beside them, avoid overwrites with numbered filenames, and reveal successful conversions in Finder.
 
 The in-app **Finder Quick Action** toggle is enabled by default. Turning it off keeps the extension installed but makes the action skip conversion until it is turned back on.
 
@@ -75,7 +83,7 @@ To share settings between the macOS app and Finder Quick Action, configure the A
 - `HEICToPNGMac`
 - `FinderQuickAction`
 
-Ad-hoc Debug builds can run the menu-bar app and convert files locally, but Finder Quick Action discovery requires a signed app install.
+Ad-hoc Debug builds can run the menu-bar app and convert files locally. Native Action Extension discovery is most reliable from a signed app install, so the Automator Quick Action is included for no-cost local Finder integration.
 
 For signed sandboxed builds, keep Downloads Folder set to Read/Write and App-Scoped Bookmarks enabled on the macOS app target. Downloads access supports AirDrop conversion; bookmarks support user-added watched folders.
 

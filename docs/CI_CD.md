@@ -11,8 +11,10 @@ make build-macos
 make build-ios
 make build
 make test-e2e-ios
+make install-finder-quick-action
 make run-macos
 make package-macos VERSION=1.0.0
+make smoke-finder-quick-action-workflow
 make smoke-homebrew-cask
 make smoke-macos-package VERSION=ci-smoke
 make ci
@@ -20,7 +22,7 @@ make ci
 
 The build commands use `HEICToPNG.xcodeproj` directly and keep build output under `.build/`.
 
-`make coverage` runs the shared converter package tests with SwiftPM coverage enabled and enforces `COVERAGE_MIN`, which defaults to 80 percent line coverage.
+`make coverage` runs the shared converter package tests with SwiftPM coverage enabled and enforces `COVERAGE_MIN`, which defaults to 80 percent line coverage. `make smoke-finder-quick-action-workflow` validates the no-cost Automator Finder Quick Action package and its embedded shell script.
 
 `make test-e2e-ios` builds the iOS Simulator app and runs the Maestro flow in `.maestro/ios-smoke.yaml`. The runner targets one exact simulator UDID, warms up simulator UI services, uses bounded waits for boot/install/test steps, increases Maestro's iOS driver startup timeout for slower CI runners, and writes reports under `.build/maestro/`. Maestro applies to the iOS app because it is a mobile UI automation tool. It is not used for the macOS menu-bar app or Finder Quick Action.
 
@@ -52,7 +54,7 @@ When the app is running, the PNG should appear beside the HEIC file in Downloads
 
 `CI` runs on pushes to `main`, pull requests, and manual dispatch. New pushes cancel older in-progress runs for the same branch so stuck simulator jobs do not pile up. It has two jobs:
 
-- `Unit, Coverage, Build, Package`: enforces converter coverage, builds the macOS app plus Finder Quick Action, builds the iOS simulator app plus Share Extension, smoke-tests Homebrew cask generation, and smoke-tests the macOS zip artifact.
+- `Unit, Coverage, Build, Package`: enforces converter coverage, builds the macOS app plus Finder Quick Action, builds the iOS simulator app plus Share Extension, validates the Automator Finder Quick Action workflow, smoke-tests Homebrew cask generation, and smoke-tests the macOS zip artifact.
 - `iOS Maestro E2E`: installs the free local Maestro CLI, builds the iOS Simulator app, installs it on a simulator, and runs the `.maestro/ios-smoke.yaml` flow.
 
 `Release` runs when you push a tag like `v1.0.0`, or manually from GitHub Actions. It runs the coverage and deployment smoke gates, builds a macOS release zip, creates or updates a GitHub Release, uploads the zip and checksum, and can update a Homebrew tap.
@@ -64,8 +66,8 @@ This project does not require the Mac App Store or a paid Apple Developer Progra
 The free path is:
 
 1. GitHub Actions builds `HEICToPNG.app`.
-2. GitHub Releases hosts `HEICToPNG-<version>.zip` and its SHA-256 checksum.
-3. The optional Homebrew tap job updates a cask that installs the app into `/Applications`.
+2. GitHub Releases hosts `HEICToPNG-<version>.zip` and its SHA-256 checksum. The zip contains `HEICToPNG.app` and the no-cost Automator Finder Quick Action workflow.
+3. The optional Homebrew tap job updates a cask that installs the app into `/Applications` and the workflow into `~/Library/Services`.
 
 Tradeoff: without Developer ID signing and notarization, macOS may show Gatekeeper warnings on first launch. A smoother “identified developer” install requires Developer ID signing and notarization, which requires Apple Developer Program membership.
 
