@@ -14,8 +14,19 @@ struct HEICToPNGMacApp: App {
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
+    private enum StatusToggle {
+        case autoConvert
+        case downloads
+        case desktop
+        case finderQuickAction
+        case reveal
+        case copy
+    }
+
     private var statusItem: NSStatusItem?
     private let statusMenu = NSMenu()
+    private weak var statusSummaryItem: NSMenuItem?
+    private var statusToggleViews: [StatusToggle: StatusMenuCheckboxView] = [:]
     private var windowController: NSWindowController?
     private var logsWindowController: NSWindowController?
     private let viewModel = MacConversionViewModel()
@@ -78,40 +89,60 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let statusItem = NSMenuItem(title: viewModel.watchedFolderSummary, action: nil, keyEquivalent: "")
         statusItem.isEnabled = false
         statusMenu.addItem(statusItem)
+        statusSummaryItem = statusItem
         statusMenu.addItem(.separator())
 
-        addToggleItem(
+        statusToggleViews = [:]
+        addCheckboxItem(
+            id: .autoConvert,
             title: "Auto-convert",
-            selector: #selector(toggleAutoConvert(_:)),
             isOn: viewModel.autoConvertNewHEICFiles
-        )
-        addToggleItem(
+        ) { [weak self] isOn in
+            self?.viewModel.autoConvertNewHEICFiles = isOn
+            self?.refreshStatusMenuState()
+        }
+        addCheckboxItem(
+            id: .downloads,
             title: "AirDrop / Downloads",
-            selector: #selector(toggleDownloadsWatch(_:)),
             isOn: viewModel.autoWatchDownloadsFolder,
             isEnabled: viewModel.autoConvertNewHEICFiles
-        )
-        addToggleItem(
+        ) { [weak self] isOn in
+            self?.viewModel.autoWatchDownloadsFolder = isOn
+            self?.refreshStatusMenuState()
+        }
+        addCheckboxItem(
+            id: .desktop,
             title: "Desktop / Screenshots",
-            selector: #selector(toggleDesktopWatch(_:)),
             isOn: viewModel.autoWatchDesktopFolder,
             isEnabled: viewModel.autoConvertNewHEICFiles
-        )
-        addToggleItem(
+        ) { [weak self] isOn in
+            self?.viewModel.autoWatchDesktopFolder = isOn
+            self?.refreshStatusMenuState()
+        }
+        addCheckboxItem(
+            id: .finderQuickAction,
             title: "Finder Quick Action",
-            selector: #selector(toggleFinderQuickAction(_:)),
             isOn: viewModel.finderQuickActionEnabled
-        )
-        addToggleItem(
+        ) { [weak self] isOn in
+            self?.viewModel.finderQuickActionEnabled = isOn
+            self?.refreshStatusMenuState()
+        }
+        addCheckboxItem(
+            id: .reveal,
             title: "Reveal after converting",
-            selector: #selector(toggleRevealAfterConverting(_:)),
             isOn: viewModel.autoRevealConvertedFiles
-        )
-        addToggleItem(
+        ) { [weak self] isOn in
+            self?.viewModel.autoRevealConvertedFiles = isOn
+            self?.refreshStatusMenuState()
+        }
+        addCheckboxItem(
+            id: .copy,
             title: "Copy after converting",
-            selector: #selector(toggleCopyAfterConverting(_:)),
             isOn: viewModel.autoCopyConvertedFiles
-        )
+        ) { [weak self] isOn in
+            self?.viewModel.autoCopyConvertedFiles = isOn
+            self?.refreshStatusMenuState()
+        }
 
         statusMenu.addItem(.separator())
         addActionItem(
@@ -129,17 +160,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         )
     }
 
-    private func addToggleItem(
+    private func addCheckboxItem(
+        id: StatusToggle,
         title: String,
-        selector: Selector,
         isOn: Bool,
-        isEnabled: Bool = true
+        isEnabled: Bool = true,
+        onChange: @escaping @MainActor (Bool) -> Void
     ) {
-        let item = NSMenuItem(title: title, action: selector, keyEquivalent: "")
-        item.target = self
-        item.state = isOn ? .on : .off
-        item.isEnabled = isEnabled
+        let item = NSMenuItem()
+        let checkboxView = StatusMenuCheckboxView(
+            title: title,
+            isOn: isOn,
+            isEnabled: isEnabled,
+            onChange: onChange
+        )
+        item.view = checkboxView
         statusMenu.addItem(item)
+        statusToggleViews[id] = checkboxView
     }
 
     private func addActionItem(title: String, selector: Selector) {
@@ -148,34 +185,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         statusMenu.addItem(item)
     }
 
-    @objc private func toggleAutoConvert(_ sender: NSMenuItem) {
-        viewModel.autoConvertNewHEICFiles.toggle()
-        rebuildStatusMenu()
-    }
-
-    @objc private func toggleDownloadsWatch(_ sender: NSMenuItem) {
-        viewModel.autoWatchDownloadsFolder.toggle()
-        rebuildStatusMenu()
-    }
-
-    @objc private func toggleDesktopWatch(_ sender: NSMenuItem) {
-        viewModel.autoWatchDesktopFolder.toggle()
-        rebuildStatusMenu()
-    }
-
-    @objc private func toggleFinderQuickAction(_ sender: NSMenuItem) {
-        viewModel.finderQuickActionEnabled.toggle()
-        rebuildStatusMenu()
-    }
-
-    @objc private func toggleRevealAfterConverting(_ sender: NSMenuItem) {
-        viewModel.autoRevealConvertedFiles.toggle()
-        rebuildStatusMenu()
-    }
-
-    @objc private func toggleCopyAfterConverting(_ sender: NSMenuItem) {
-        viewModel.autoCopyConvertedFiles.toggle()
-        rebuildStatusMenu()
+    private func refreshStatusMenuState() {
+        statusSummaryItem?.title = viewModel.watchedFolderSummary
+        statusToggleViews[.autoConvert]?.update(
+            isOn: viewModel.autoConvertNewHEICFiles
+        )
+        statusToggleViews[.downloads]?.update(
+            isOn: viewModel.autoWatchDownloadsFolder,
+            isEnabled: viewModel.autoConvertNewHEICFiles
+        )
+        statusToggleViews[.desktop]?.update(
+            isOn: viewModel.autoWatchDesktopFolder,
+            isEnabled: viewModel.autoConvertNewHEICFiles
+        )
+        statusToggleViews[.finderQuickAction]?.update(
+            isOn: viewModel.finderQuickActionEnabled
+        )
+        statusToggleViews[.reveal]?.update(
+            isOn: viewModel.autoRevealConvertedFiles
+        )
+        statusToggleViews[.copy]?.update(
+            isOn: viewModel.autoCopyConvertedFiles
+        )
     }
 
     @objc private func openAppFromMenu(_ sender: NSMenuItem) {
@@ -227,5 +258,52 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         window.center()
 
         return NSWindowController(window: window)
+    }
+}
+
+@MainActor
+private final class StatusMenuCheckboxView: NSView {
+    private let checkbox: NSButton
+    private let onChange: @MainActor (Bool) -> Void
+
+    init(
+        title: String,
+        isOn: Bool,
+        isEnabled: Bool,
+        onChange: @escaping @MainActor (Bool) -> Void
+    ) {
+        self.checkbox = NSButton(checkboxWithTitle: title, target: nil, action: nil)
+        self.onChange = onChange
+
+        super.init(frame: NSRect(x: 0, y: 0, width: 260, height: 30))
+
+        checkbox.target = self
+        checkbox.action = #selector(toggleCheckbox(_:))
+        checkbox.font = NSFont.menuFont(ofSize: 0)
+        checkbox.controlSize = .regular
+        checkbox.state = isOn ? .on : .off
+        checkbox.isEnabled = isEnabled
+        checkbox.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(checkbox)
+        NSLayoutConstraint.activate([
+            checkbox.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
+            checkbox.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -12),
+            checkbox.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        nil
+    }
+
+    func update(isOn: Bool, isEnabled: Bool = true) {
+        checkbox.state = isOn ? .on : .off
+        checkbox.isEnabled = isEnabled
+    }
+
+    @objc private func toggleCheckbox(_ sender: NSButton) {
+        onChange(sender.state == .on)
     }
 }
