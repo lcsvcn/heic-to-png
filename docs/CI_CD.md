@@ -22,7 +22,7 @@ The build commands use `HEICToPNG.xcodeproj` directly and keep build output unde
 
 `make coverage` runs the shared converter package tests with SwiftPM coverage enabled and enforces `COVERAGE_MIN`, which defaults to 80 percent line coverage.
 
-`make test-e2e-ios` builds the iOS Simulator app and runs the Maestro flow in `.maestro/ios-smoke.yaml`. The runner targets one exact simulator UDID, uses bounded waits for boot/install/test steps, and writes reports under `.build/maestro/`. Maestro applies to the iOS app because it is a mobile UI automation tool. It is not used for the macOS menu-bar app or Finder Quick Action.
+`make test-e2e-ios` builds the iOS Simulator app and runs the Maestro flow in `.maestro/ios-smoke.yaml`. The runner targets one exact simulator UDID, warms up simulator UI services, uses bounded waits for boot/install/test steps, increases Maestro's iOS driver startup timeout for slower CI runners, and writes reports under `.build/maestro/`. Maestro applies to the iOS app because it is a mobile UI automation tool. It is not used for the macOS menu-bar app or Finder Quick Action.
 
 Install Maestro locally with:
 

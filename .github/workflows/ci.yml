@@ -66,9 +66,15 @@ jobs:
       - name: Install Maestro CLI
         run: scripts/install-maestro.sh
 
+      - name: Build iOS simulator app
+        timeout-minutes: 8
+        run: make build-ios
+
       - name: Run iOS Maestro smoke flow
         timeout-minutes: 12
-        run: make test-e2e-ios
+        env:
+          MAESTRO_DRIVER_STARTUP_TIMEOUT: "300000"
+        run: make run-e2e-ios
 
       - name: Upload Maestro report
         uses: actions/upload-artifact@v7

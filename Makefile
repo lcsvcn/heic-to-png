@@ -12,7 +12,7 @@ COVERAGE_MIN ?= 80
 IOS_BUNDLE_ID ?= com.lcsvcn.HEICToPNG.iOS
 IOS_APP_PATH ?= $(IOS_DERIVED_DATA)/Build/Products/Debug-iphonesimulator/HEICToPNGiOS.app
 
-.PHONY: help test coverage build build-macos build-ios test-e2e-ios run-macos package-macos smoke-homebrew-cask smoke-macos-package ci clean
+.PHONY: help test coverage build build-macos build-ios run-e2e-ios test-e2e-ios run-macos package-macos smoke-homebrew-cask smoke-macos-package ci clean
 
 help:
 	@printf "Available commands:\n"
@@ -21,6 +21,7 @@ help:
 	@printf "  make build            Build macOS and iOS simulator targets\n"
 	@printf "  make build-macos      Build the macOS menu-bar app and Quick Action\n"
 	@printf "  make build-ios        Build the iOS app and Share Extension for simulator\n"
+	@printf "  make run-e2e-ios      Run Maestro against an existing iOS simulator app build\n"
 	@printf "  make test-e2e-ios     Build iOS simulator app and run Maestro E2E smoke flow\n"
 	@printf "  make run-macos        Build and launch the macOS menu-bar app\n"
 	@printf "  make package-macos    Build Release and create a Homebrew-ready zip\n"
@@ -58,8 +59,10 @@ build-ios:
 		CODE_SIGNING_ALLOWED=NO \
 		build
 
-test-e2e-ios: build-ios
+run-e2e-ios:
 	IOS_BUNDLE_ID="$(IOS_BUNDLE_ID)" IOS_APP_PATH="$(IOS_APP_PATH)" scripts/run-ios-maestro.sh
+
+test-e2e-ios: build-ios run-e2e-ios
 
 run-macos: build-macos
 	open "$(MAC_DERIVED_DATA)/Build/Products/$(CONFIGURATION)/HEICToPNG.app"

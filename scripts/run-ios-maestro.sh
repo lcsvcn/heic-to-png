@@ -4,6 +4,7 @@ set -euo pipefail
 export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
 export MAESTRO_CLI_NO_ANALYTICS="${MAESTRO_CLI_NO_ANALYTICS:-true}"
 export MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED="${MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED:-true}"
+export MAESTRO_DRIVER_STARTUP_TIMEOUT="${MAESTRO_DRIVER_STARTUP_TIMEOUT:-300000}"
 
 if [[ -z "${JAVA_HOME:-}" && -d "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home" ]]; then
   export JAVA_HOME="/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
@@ -18,7 +19,7 @@ report_path="${MAESTRO_REPORT_PATH:-$PWD/.build/maestro/report.xml}"
 debug_output="${MAESTRO_DEBUG_OUTPUT:-$PWD/.build/maestro/debug}"
 boot_timeout="${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS:-180}"
 install_timeout="${IOS_SIMULATOR_INSTALL_TIMEOUT_SECONDS:-120}"
-maestro_timeout="${MAESTRO_TEST_TIMEOUT_SECONDS:-240}"
+maestro_timeout="${MAESTRO_TEST_TIMEOUT_SECONDS:-600}"
 
 run_with_timeout() {
   local timeout_seconds="$1"
@@ -111,10 +112,16 @@ fi
 echo "Waiting for iOS simulator to finish booting."
 run_with_timeout "$boot_timeout" xcrun simctl bootstatus "$simulator_udid" -b
 
+echo "Warming up simulator UI services."
+xcrun simctl launch "$simulator_udid" com.apple.Preferences >/dev/null 2>&1 || true
+sleep 5
+xcrun simctl terminate "$simulator_udid" com.apple.Preferences >/dev/null 2>&1 || true
+
 echo "Installing iOS simulator app."
 run_with_timeout "$install_timeout" xcrun simctl install "$simulator_udid" "$app_path"
 
 mkdir -p "$(dirname "$report_path")" "$debug_output"
+touch "$(dirname "$report_path")/.keep"
 echo "Running Maestro iOS smoke flow."
 run_with_timeout "$maestro_timeout" maestro --device "$simulator_udid" --platform=ios test \
   --env APP_ID="$app_id" \
