@@ -41,6 +41,7 @@ A native Swift workspace for converting HEIC/HEIF images to PNG on macOS and iOS
 4. Converted PNG files are saved beside the originals.
 5. Use **Copy** to copy converted PNG files to the clipboard.
 6. Use **Reveal** to show the converted files in Finder.
+7. Use the toggles to customize Finder Quick Action conversion, automatic reveal, and automatic copy behavior.
 
 ### Finder Quick Action
 
@@ -51,6 +52,15 @@ A native Swift workspace for converting HEIC/HEIF images to PNG on macOS and iOS
 5. Right-click and choose **Quick Actions → Convert HEIC to PNG**.
 
 The Quick Action preserves the original images, writes PNG files beside them, avoids overwrites with numbered filenames, and reveals successful conversions in Finder.
+
+The in-app **Finder Quick Action** toggle is enabled by default. Turning it off keeps the extension installed but makes the action skip conversion until it is turned back on.
+
+To share settings between the macOS app and Finder Quick Action, configure the App Group `group.com.lcsvcn.HEICToPNG` for both macOS targets when signing:
+
+- `HEICToPNGMac`
+- `FinderQuickAction`
+
+Ad-hoc Debug builds can run the menu-bar app and convert files locally, but Finder Quick Action discovery requires a signed app install.
 
 ## iOS Usage
 

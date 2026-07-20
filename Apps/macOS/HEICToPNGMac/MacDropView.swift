@@ -44,12 +44,14 @@ struct MacDropView: View {
                 .disabled(viewModel.converted.isEmpty)
             }
 
+            options
+
             Divider()
 
             resultList
         }
         .padding(18)
-        .frame(minWidth: 340, minHeight: 440)
+        .frame(minWidth: 360, minHeight: 540)
     }
 
     private var dropZone: some View {
@@ -104,6 +106,32 @@ struct MacDropView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+    }
+
+    private var options: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Toggle(isOn: $viewModel.finderQuickActionEnabled) {
+                Label("Finder Quick Action", systemImage: "filemenu.and.selection")
+            }
+
+            Toggle(isOn: $viewModel.autoRevealConvertedFiles) {
+                Label("Reveal after converting", systemImage: "folder")
+            }
+
+            Toggle(isOn: $viewModel.autoCopyConvertedFiles) {
+                Label("Copy after converting", systemImage: "doc.on.doc")
+            }
+
+            Button {
+                viewModel.openExtensionSettings()
+            } label: {
+                Label("Extensions", systemImage: "switch.2")
+            }
+            .buttonStyle(.link)
+        }
+        .toggleStyle(.switch)
+        .font(.callout)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func handleDrop(providers: [NSItemProvider]) -> Bool {

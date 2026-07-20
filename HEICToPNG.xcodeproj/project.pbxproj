@@ -23,6 +23,8 @@
 		250000000000000000000002 /* HEICShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 100000000000000000000004 /* HEICShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		260000000000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150000000000000000000001 /* Assets.xcassets */; };
 		260000000000000000000002 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150000000000000000000001 /* Assets.xcassets */; };
+		270000000000000000000001 /* MacConversionPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160000000000000000000001 /* MacConversionPreferences.swift */; };
+		270000000000000000000002 /* MacConversionPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160000000000000000000001 /* MacConversionPreferences.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +89,7 @@
 		140000000000000000000001 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		140000000000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		150000000000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		160000000000000000000001 /* MacConversionPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacConversionPreferences.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +133,7 @@
 			children = (
 				000000000000000000000004 /* Apps */,
 				000000000000000000000005 /* Extensions */,
+				000000000000000000000011 /* Shared */,
 				000000000000000000000010 /* Resources */,
 				000000000000000000000003 /* Products */,
 			);
@@ -212,6 +216,22 @@
 				150000000000000000000001 /* Assets.xcassets */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		000000000000000000000011 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000012 /* macOS */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		000000000000000000000012 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				160000000000000000000001 /* MacConversionPreferences.swift */,
+			);
+			path = macOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -394,6 +414,7 @@
 				210000000000000000000001 /* HEICToPNGMacApp.swift in Sources */,
 				210000000000000000000002 /* MacConversionViewModel.swift in Sources */,
 				210000000000000000000003 /* MacDropView.swift in Sources */,
+				270000000000000000000001 /* MacConversionPreferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,6 +423,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				220000000000000000000001 /* FinderActionRequestHandler.swift in Sources */,
+				270000000000000000000002 /* MacConversionPreferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

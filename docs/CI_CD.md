@@ -16,6 +16,15 @@ make ci
 
 The build commands use `HEICToPNG.xcodeproj` directly and keep build output under `.build/`.
 
+For a local smoke test of app-level conversion:
+
+```bash
+make run-macos
+open -a "$(pwd)/.build/DerivedData/Build/Products/Debug/HEICToPNG.app" path/to/photo.heic
+```
+
+The PNG is written beside the HEIC file.
+
 ## GitHub Actions
 
 `CI` runs on pushes to `main`, pull requests, and manual dispatch. It runs the unit tests, builds the macOS app plus Finder Quick Action, and builds the iOS simulator app plus Share Extension.
@@ -45,6 +54,8 @@ brew install --cask heic-to-png
 If the tap secrets are missing, release still succeeds and the Homebrew update step is skipped.
 
 Because this app repository is private, Homebrew installs will need authenticated access to the GitHub release asset. For a public one-command install, publish release artifacts from a public repository or another public download location.
+
+For signed macOS builds, enable the App Group `group.com.lcsvcn.HEICToPNG` on both macOS targets so the app settings and Finder Quick Action settings stay in sync.
 
 ## Release steps
 

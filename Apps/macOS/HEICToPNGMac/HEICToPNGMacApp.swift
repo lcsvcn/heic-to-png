@@ -37,6 +37,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = item
     }
 
+    func application(_ application: NSApplication, open urls: [URL]) {
+        viewModel.convert(urls: urls)
+    }
+
     @objc private func togglePopover(_ sender: AnyObject?) {
         guard let button = statusItem?.button else {
             return

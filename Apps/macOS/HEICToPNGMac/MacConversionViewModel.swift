@@ -8,8 +8,29 @@ final class MacConversionViewModel: ObservableObject {
     @Published var converted: [HEICPNGConversionResult] = []
     @Published var failures: [HEICPNGConversionFailure] = []
     @Published var isConverting = false
+    @Published var finderQuickActionEnabled: Bool {
+        didSet {
+            MacConversionPreferences.finderQuickActionEnabled = finderQuickActionEnabled
+        }
+    }
+    @Published var autoRevealConvertedFiles: Bool {
+        didSet {
+            MacConversionPreferences.autoRevealConvertedFiles = autoRevealConvertedFiles
+        }
+    }
+    @Published var autoCopyConvertedFiles: Bool {
+        didSet {
+            MacConversionPreferences.autoCopyConvertedFiles = autoCopyConvertedFiles
+        }
+    }
 
     private let converter = HEICPNGConverter()
+
+    init() {
+        finderQuickActionEnabled = MacConversionPreferences.finderQuickActionEnabled
+        autoRevealConvertedFiles = MacConversionPreferences.autoRevealConvertedFiles
+        autoCopyConvertedFiles = MacConversionPreferences.autoCopyConvertedFiles
+    }
 
     var statusText: String {
         if isConverting {
@@ -48,18 +69,24 @@ final class MacConversionViewModel: ObservableObject {
         isConverting = true
         converted = []
         failures = []
+        let shouldReveal = autoRevealConvertedFiles
+        let shouldCopy = autoCopyConvertedFiles
 
         Task.detached { [converter] in
             let batch = converter.convert(urls: urls)
+            let outputURLs = batch.converted.map(\.outputURL)
+
             await MainActor.run {
                 self.converted = batch.converted
                 self.failures = batch.failures
                 self.isConverting = false
 
-                if batch.didConvertAnything {
-                    NSWorkspace.shared.activateFileViewerSelecting(
-                        batch.converted.map(\.outputURL)
-                    )
+                if batch.didConvertAnything && shouldCopy {
+                    self.copyFilesToPasteboard(outputURLs)
+                }
+
+                if batch.didConvertAnything && shouldReveal {
+                    NSWorkspace.shared.activateFileViewerSelecting(outputURLs)
                 }
             }
         }
@@ -84,5 +111,22 @@ final class MacConversionViewModel: ObservableObject {
 
         NSWorkspace.shared.activateFileViewerSelecting(urls)
     }
-}
 
+    func openExtensionSettings() {
+        guard let url = URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences") else {
+            return
+        }
+
+        NSWorkspace.shared.open(url)
+    }
+
+    private func copyFilesToPasteboard(_ urls: [URL]) {
+        guard !urls.isEmpty else {
+            return
+        }
+
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.writeObjects(urls as [NSURL])
+    }
+}

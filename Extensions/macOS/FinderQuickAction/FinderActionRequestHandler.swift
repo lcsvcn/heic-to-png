@@ -12,11 +12,26 @@ final class FinderActionRequestHandler: NSObject, NSExtensionRequestHandling, @u
 
         Task {
             let context = contextBox.value
+            guard MacConversionPreferences.finderQuickActionEnabled else {
+                let response = NSExtensionItem()
+                response.attributedTitle = NSAttributedString(string: "Convert HEIC to PNG")
+                response.attributedContentText = NSAttributedString(
+                    string: "Finder Quick Action is turned off in HEIC to PNG."
+                )
+                context.completeRequest(returningItems: [response], completionHandler: nil)
+                return
+            }
+
             let urls = await Self.fileURLs(from: context.inputItems)
             let batch = converter.convert(urls: urls)
+            let outputURLs = batch.converted.map(\.outputURL)
 
-            if batch.didConvertAnything {
-                NSWorkspace.shared.activateFileViewerSelecting(batch.converted.map(\.outputURL))
+            if batch.didConvertAnything && MacConversionPreferences.autoCopyConvertedFiles {
+                Self.copyFilesToPasteboard(outputURLs)
+            }
+
+            if batch.didConvertAnything && MacConversionPreferences.autoRevealConvertedFiles {
+                NSWorkspace.shared.activateFileViewerSelecting(outputURLs)
             }
 
             let response = NSExtensionItem()
@@ -35,6 +50,16 @@ final class FinderActionRequestHandler: NSObject, NSExtensionRequestHandling, @u
         let convertedText = batch.converted.isEmpty ? nil : "\(batch.converted.count) converted"
         let failureText = batch.failures.isEmpty ? nil : "\(batch.failures.count) failed"
         return [convertedText, failureText].compactMap { $0 }.joined(separator: ", ")
+    }
+
+    private static func copyFilesToPasteboard(_ urls: [URL]) {
+        guard !urls.isEmpty else {
+            return
+        }
+
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.writeObjects(urls as [NSURL])
     }
 
     private static func fileURLs(from inputItems: [Any]) async -> [URL] {
