@@ -16,6 +16,7 @@ struct HEICToPNGMacApp: App {
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
     private var windowController: NSWindowController?
+    private var logsWindowController: NSWindowController?
     private let viewModel = MacConversionViewModel()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -52,7 +53,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func makeConverterWindow() -> NSWindowController {
         let hostingController = NSHostingController(
-            rootView: MacDropView(viewModel: viewModel)
+            rootView: MacDropView(viewModel: viewModel) { [weak self] in
+                self?.showLogsWindow()
+            }
         )
         let window = NSWindow(contentViewController: hostingController)
         window.title = "HEIC to PNG"
@@ -64,8 +67,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .fullSizeContentView
         ]
         window.isReleasedWhenClosed = false
-        window.setContentSize(NSSize(width: 430, height: 660))
-        window.minSize = NSSize(width: 390, height: 560)
+        window.setContentSize(NSSize(width: 430, height: 520))
+        window.minSize = NSSize(width: 410, height: 500)
         window.center()
 
         return NSWindowController(window: window)
@@ -75,5 +78,38 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.activate(ignoringOtherApps: true)
         windowController?.showWindow(nil)
         windowController?.window?.makeKeyAndOrderFront(nil)
+    }
+
+    private func showLogsWindow() {
+        viewModel.reloadLogs()
+
+        if logsWindowController == nil {
+            logsWindowController = makeLogsWindow()
+        }
+
+        NSApp.activate(ignoringOtherApps: true)
+        logsWindowController?.showWindow(nil)
+        logsWindowController?.window?.makeKeyAndOrderFront(nil)
+    }
+
+    private func makeLogsWindow() -> NSWindowController {
+        let hostingController = NSHostingController(
+            rootView: MacConversionLogsView(viewModel: viewModel)
+        )
+        let window = NSWindow(contentViewController: hostingController)
+        window.title = "Conversion Logs"
+        window.styleMask = [
+            .titled,
+            .closable,
+            .miniaturizable,
+            .resizable,
+            .fullSizeContentView
+        ]
+        window.isReleasedWhenClosed = false
+        window.setContentSize(NSSize(width: 680, height: 460))
+        window.minSize = NSSize(width: 600, height: 360)
+        window.center()
+
+        return NSWindowController(window: window)
     }
 }

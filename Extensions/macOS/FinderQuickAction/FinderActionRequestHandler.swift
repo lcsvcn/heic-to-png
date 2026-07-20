@@ -13,6 +13,11 @@ final class FinderActionRequestHandler: NSObject, NSExtensionRequestHandling, @u
         Task {
             let context = contextBox.value
             guard MacConversionPreferences.finderQuickActionEnabled else {
+                MacConversionLogStore.append(
+                    kind: .quickAction,
+                    title: "Finder Quick Action skipped",
+                    detail: "Disabled in HEIC to PNG settings."
+                )
                 let response = NSExtensionItem()
                 response.attributedTitle = NSAttributedString(string: "Convert HEIC to PNG")
                 response.attributedContentText = NSAttributedString(
@@ -25,6 +30,7 @@ final class FinderActionRequestHandler: NSObject, NSExtensionRequestHandling, @u
             let urls = await Self.fileURLs(from: context.inputItems)
             let batch = converter.convert(urls: urls)
             let outputURLs = batch.converted.map(\.outputURL)
+            MacConversionLogStore.appendConversionBatch(batch, source: .finderQuickAction)
 
             if batch.didConvertAnything && MacConversionPreferences.autoCopyConvertedFiles {
                 Self.copyFilesToPasteboard(outputURLs)

@@ -4,7 +4,7 @@ A native Swift workspace for converting HEIC/HEIF images to PNG on macOS and iOS
 
 ## What is included
 
-- macOS menu-bar app with a persistent converter window, file/folder picking, drag-and-drop, and automatic watched-folder conversion.
+- macOS menu-bar app with automatic watched-folder conversion, file/folder picking, and a separate conversion logs window.
 - Finder Quick Action named **Convert HEIC to PNG**.
 - iOS SwiftUI app with file import, copy, and share actions.
 - iOS Share Extension for Photos and Files.
@@ -36,14 +36,13 @@ A native Swift workspace for converting HEIC/HEIF images to PNG on macOS and iOS
 ### Menu-Bar App
 
 1. Build and run `HEICToPNGMac`.
-2. Click the menu-bar icon to open the converter window.
-3. Use **Convert Files** for selected HEIC/HEIF files.
-4. Use **Convert Folder** to scan a selected folder for HEIC/HEIF images.
-5. Optionally drop files or folders onto the window while it stays open.
-6. Converted PNG files are saved beside the originals.
-7. Use **Copy** to copy converted PNG files to the clipboard.
-8. Use **Reveal** to show the converted files in Finder.
-9. Use the toggles to customize Finder Quick Action conversion, automatic reveal, automatic copy, and watched-folder conversion behavior.
+2. Click the menu-bar icon to open the settings window.
+3. Keep **Auto-convert** enabled for automatic PNG creation.
+4. Keep **AirDrop / Downloads** and **Desktop / Screenshots** enabled for the default watch locations.
+5. Use **Watch Folder** for any other screenshot, export, or sync folder.
+6. Use **Convert Files** or **Convert Folder** for older HEIC/HEIF images.
+7. Use **See Logs** to open conversion history and settings-change logs in a separate app window.
+8. Use the Finder **Quick Action** toggle to enable or disable the Finder menu action.
 
 ### Automatic AirDrop and Screenshot Conversion
 
@@ -56,7 +55,7 @@ Default watched folders:
 
 Use **Watch Folder** to watch another screenshot/export folder. This is useful if macOS screenshots or image exports are saved somewhere other than Desktop.
 
-The watcher preserves the original HEIC/HEIF file. It skips files that already have a same-name `.png` beside them, so repeated folder scans do not create endless numbered duplicates.
+The watcher preserves the original HEIC/HEIF file. It skips files that already have a same-name `.png` beside them, so repeated folder scans do not create endless numbered duplicates. Conversion history stays out of the menu-bar panel and is available from **See Logs**.
 
 The app cannot intercept AirDrop before macOS writes the received file. It watches the destination folder and creates the PNG immediately after the file appears and is readable.
 

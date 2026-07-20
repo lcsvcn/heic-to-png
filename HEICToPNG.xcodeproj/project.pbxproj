@@ -11,6 +11,7 @@
 		210000000000000000000002 /* MacConversionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000000000000000000002 /* MacConversionViewModel.swift */; };
 		210000000000000000000003 /* MacDropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000000000000000000003 /* MacDropView.swift */; };
 		210000000000000000000004 /* HEICPNGCore in Frameworks */ = {isa = PBXBuildFile; productRef = 900000000000000000000002 /* HEICPNGCore */; };
+		210000000000000000000005 /* MacConversionLogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000000000000000000007 /* MacConversionLogsView.swift */; };
 		220000000000000000000001 /* FinderActionRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120000000000000000000001 /* FinderActionRequestHandler.swift */; };
 		220000000000000000000002 /* HEICPNGCore in Frameworks */ = {isa = PBXBuildFile; productRef = 900000000000000000000002 /* HEICPNGCore */; };
 		230000000000000000000001 /* HEICToPNGiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130000000000000000000001 /* HEICToPNGiOSApp.swift */; };
@@ -26,6 +27,8 @@
 		270000000000000000000001 /* MacConversionPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160000000000000000000001 /* MacConversionPreferences.swift */; };
 		270000000000000000000002 /* MacConversionPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160000000000000000000001 /* MacConversionPreferences.swift */; };
 		270000000000000000000003 /* MacAutoConversionWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000000000000000000006 /* MacAutoConversionWatcher.swift */; };
+		270000000000000000000004 /* MacConversionLogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160000000000000000000002 /* MacConversionLogStore.swift */; };
+		270000000000000000000005 /* MacConversionLogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160000000000000000000002 /* MacConversionLogStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +84,7 @@
 		110000000000000000000004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		110000000000000000000005 /* HEICToPNGMac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HEICToPNGMac.entitlements; sourceTree = "<group>"; };
 		110000000000000000000006 /* MacAutoConversionWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacAutoConversionWatcher.swift; sourceTree = "<group>"; };
+		110000000000000000000007 /* MacConversionLogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacConversionLogsView.swift; sourceTree = "<group>"; };
 		120000000000000000000001 /* FinderActionRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinderActionRequestHandler.swift; sourceTree = "<group>"; };
 		120000000000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		120000000000000000000003 /* FinderQuickAction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FinderQuickAction.entitlements; sourceTree = "<group>"; };
@@ -92,6 +96,7 @@
 		140000000000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		150000000000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		160000000000000000000001 /* MacConversionPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacConversionPreferences.swift; sourceTree = "<group>"; };
+		160000000000000000000002 /* MacConversionLogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacConversionLogStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +181,7 @@
 				110000000000000000000001 /* HEICToPNGMacApp.swift */,
 				110000000000000000000002 /* MacConversionViewModel.swift */,
 				110000000000000000000003 /* MacDropView.swift */,
+				110000000000000000000007 /* MacConversionLogsView.swift */,
 				110000000000000000000006 /* MacAutoConversionWatcher.swift */,
 				110000000000000000000004 /* Info.plist */,
 				110000000000000000000005 /* HEICToPNGMac.entitlements */,
@@ -233,6 +239,7 @@
 			isa = PBXGroup;
 			children = (
 				160000000000000000000001 /* MacConversionPreferences.swift */,
+				160000000000000000000002 /* MacConversionLogStore.swift */,
 			);
 			path = macOS;
 			sourceTree = "<group>";
@@ -417,7 +424,9 @@
 				210000000000000000000001 /* HEICToPNGMacApp.swift in Sources */,
 				210000000000000000000002 /* MacConversionViewModel.swift in Sources */,
 				210000000000000000000003 /* MacDropView.swift in Sources */,
+				210000000000000000000005 /* MacConversionLogsView.swift in Sources */,
 				270000000000000000000001 /* MacConversionPreferences.swift in Sources */,
+				270000000000000000000004 /* MacConversionLogStore.swift in Sources */,
 				270000000000000000000003 /* MacAutoConversionWatcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -428,6 +437,7 @@
 			files = (
 				220000000000000000000001 /* FinderActionRequestHandler.swift in Sources */,
 				270000000000000000000002 /* MacConversionPreferences.swift in Sources */,
+				270000000000000000000005 /* MacConversionLogStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

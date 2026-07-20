@@ -17,37 +17,68 @@ final class MacConversionViewModel: ObservableObject {
     @Published var finderQuickActionEnabled: Bool {
         didSet {
             MacConversionPreferences.finderQuickActionEnabled = finderQuickActionEnabled
+            logSettingChange(
+                "Finder Quick Action",
+                isEnabled: finderQuickActionEnabled,
+                oldValue: oldValue
+            )
         }
     }
     @Published var autoRevealConvertedFiles: Bool {
         didSet {
             MacConversionPreferences.autoRevealConvertedFiles = autoRevealConvertedFiles
+            logSettingChange(
+                "Reveal after converting",
+                isEnabled: autoRevealConvertedFiles,
+                oldValue: oldValue
+            )
         }
     }
     @Published var autoCopyConvertedFiles: Bool {
         didSet {
             MacConversionPreferences.autoCopyConvertedFiles = autoCopyConvertedFiles
+            logSettingChange(
+                "Copy after converting",
+                isEnabled: autoCopyConvertedFiles,
+                oldValue: oldValue
+            )
         }
     }
     @Published var autoConvertNewHEICFiles: Bool {
         didSet {
             MacConversionPreferences.autoConvertNewHEICFiles = autoConvertNewHEICFiles
+            logSettingChange(
+                "Auto-convert new HEIC files",
+                isEnabled: autoConvertNewHEICFiles,
+                oldValue: oldValue
+            )
             updateAutoWatcher()
         }
     }
     @Published var autoWatchDownloadsFolder: Bool {
         didSet {
             MacConversionPreferences.autoWatchDownloadsFolder = autoWatchDownloadsFolder
+            logSettingChange(
+                "AirDrop / Downloads",
+                isEnabled: autoWatchDownloadsFolder,
+                oldValue: oldValue
+            )
             updateAutoWatcher()
         }
     }
     @Published var autoWatchDesktopFolder: Bool {
         didSet {
             MacConversionPreferences.autoWatchDesktopFolder = autoWatchDesktopFolder
+            logSettingChange(
+                "Desktop / Screenshots",
+                isEnabled: autoWatchDesktopFolder,
+                oldValue: oldValue
+            )
             updateAutoWatcher()
         }
     }
     @Published private(set) var customWatchedFolderNames: [String] = []
+    @Published private(set) var logEntries: [MacConversionLogEntry] = []
 
     private let converter = HEICPNGConverter()
     private let autoWatcher = MacAutoConversionWatcher()
@@ -60,6 +91,7 @@ final class MacConversionViewModel: ObservableObject {
         autoWatchDownloadsFolder = MacConversionPreferences.autoWatchDownloadsFolder
         autoWatchDesktopFolder = MacConversionPreferences.autoWatchDesktopFolder
         customWatchedFolderNames = Self.customWatchedFolders().map(\.lastPathComponent)
+        logEntries = MacConversionLogStore.entries()
 
         autoWatcher.onBatch = { [weak self] batch in
             Task { @MainActor in
@@ -79,7 +111,7 @@ final class MacConversionViewModel: ObservableObject {
         }
 
         if converted.isEmpty && failures.isEmpty {
-            return "Ready"
+            return watchedFolderSummary
         }
 
         let successText = converted.isEmpty ? nil : "\(converted.count) converted"
@@ -113,6 +145,10 @@ final class MacConversionViewModel: ObservableObject {
 
         names.append(contentsOf: customWatchedFolderNames)
         return names
+    }
+
+    var lastConvertedOutputURLs: [URL] {
+        converted.map(\.outputURL)
     }
 
     func chooseFiles() {
@@ -174,6 +210,8 @@ final class MacConversionViewModel: ObservableObject {
                 self.converted = batch.converted
                 self.failures = batch.failures
                 self.isConverting = false
+                MacConversionLogStore.appendConversionBatch(batch, source: .manual)
+                self.reloadLogs()
 
                 if batch.didConvertAnything && shouldCopy {
                     self.copyFilesToPasteboard(outputURLs)
@@ -228,6 +266,11 @@ final class MacConversionViewModel: ObservableObject {
         for url in panel.urls {
             do {
                 try MacConversionPreferences.addCustomWatchedFolder(url)
+                MacConversionLogStore.append(
+                    kind: .watcher,
+                    title: "Started watching \(url.lastPathComponent)",
+                    detail: url.path
+                )
             } catch {
                 failures.insert(
                     HEICPNGConversionFailure(
@@ -236,17 +279,41 @@ final class MacConversionViewModel: ObservableObject {
                     ),
                     at: 0
                 )
+                MacConversionLogStore.append(
+                    kind: .failure,
+                    title: "Could not watch \(url.lastPathComponent)",
+                    detail: error.localizedDescription
+                )
             }
         }
 
         reloadCustomWatchedFolders()
         updateAutoWatcher()
+        reloadLogs()
     }
 
     func removeWatchedFolder(at index: Int) {
+        let removedName = customWatchedFolderNames.indices.contains(index) ? customWatchedFolderNames[index] : nil
         MacConversionPreferences.removeCustomWatchedFolder(at: index)
         reloadCustomWatchedFolders()
         updateAutoWatcher()
+
+        if let removedName {
+            MacConversionLogStore.append(
+                kind: .watcher,
+                title: "Stopped watching \(removedName)"
+            )
+            reloadLogs()
+        }
+    }
+
+    func reloadLogs() {
+        logEntries = MacConversionLogStore.entries()
+    }
+
+    func clearLogs() {
+        MacConversionLogStore.clear()
+        reloadLogs()
     }
 
     private func copyFilesToPasteboard(_ urls: [URL]) {
@@ -263,6 +330,8 @@ final class MacConversionViewModel: ObservableObject {
         converted = batch.converted + converted
         failures = batch.failures + failures
         let outputURLs = batch.converted.map(\.outputURL)
+        MacConversionLogStore.appendConversionBatch(batch, source: .automatic)
+        reloadLogs()
 
         if batch.didConvertAnything && autoCopyConvertedFiles {
             copyFilesToPasteboard(outputURLs)
@@ -302,6 +371,15 @@ final class MacConversionViewModel: ObservableObject {
 
     private func reloadCustomWatchedFolders() {
         customWatchedFolderNames = Self.customWatchedFolders().map(\.lastPathComponent)
+    }
+
+    private func logSettingChange(_ setting: String, isEnabled: Bool, oldValue: Bool) {
+        guard oldValue != isEnabled else {
+            return
+        }
+
+        MacConversionLogStore.appendSettingChange(setting, isEnabled: isEnabled)
+        reloadLogs()
     }
 
     private static func customWatchedFolders() -> [URL] {
