@@ -149,6 +149,6 @@ See `docs/CI_CD.md` for release and tap setup details.
 
 ## Notes
 
-- iPhone screenshots are usually PNG already; camera photos are commonly HEIC unless **Settings → Camera → Formats → Most Compatible** is enabled.
+- Screenshots, AirDrop files, downloads, exports, and camera photos can all arrive as HEIC/HEIF depending on the device, app, and settings. HEIC to PNG treats them the same: any `.heic` or `.heif` file is converted to PNG while preserving the original.
 - Browsers do not allow a general-purpose app to silently replace every selected upload file. The Finder Quick Action, menu-bar app, iOS app, and Share Extension cover the reliable native workflows.
 - The no-cost macOS deployment path is GitHub Releases plus Homebrew Cask. Notarization and Developer ID distribution require Apple Developer Program membership.
