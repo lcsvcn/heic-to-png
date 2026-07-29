@@ -145,6 +145,14 @@ For Homebrew deployment, configure repository secrets:
 
 `HOMEBREW_TAP_TOKEN` is also supported, but a deploy key is preferred because it can be scoped to the tap repository.
 
+Install the published macOS cask with:
+
+```bash
+brew tap lcsvcn/tap
+brew trust lcsvcn/tap
+brew install --cask heic-to-png
+```
+
 See `docs/CI_CD.md` for release and tap setup details.
 
 ## Notes

@@ -92,12 +92,15 @@ Users can then install with:
 
 ```bash
 brew tap lcsvcn/tap
+brew trust lcsvcn/tap
 brew install --cask heic-to-png
 ```
 
+Homebrew may refuse to load casks from a third-party tap until that tap is trusted locally. `brew trust lcsvcn/tap` is only needed once per machine.
+
 If the tap secrets are missing, tag-triggered CD fails after publishing the GitHub Release. Manual CD runs only update Homebrew when `publish_homebrew` is selected.
 
-Because this app repository is private, Homebrew installs will need authenticated access to the GitHub release asset. For a public one-command install, publish release artifacts from a public repository or another public download location.
+The app repository and release assets must stay public for unauthenticated Homebrew installs to work.
 
 For signed macOS builds, enable the App Group `group.com.lcsvcn.HEICToPNG` on both macOS targets so the app settings and Finder Quick Action settings stay in sync.
 
