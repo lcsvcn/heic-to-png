@@ -21,6 +21,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         case finderQuickAction
         case reveal
         case copy
+        case deleteOriginal
     }
 
     private var statusItem: NSStatusItem?
@@ -143,6 +144,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             self?.viewModel.autoCopyConvertedFiles = isOn
             self?.refreshStatusMenuState()
         }
+        addCheckboxItem(
+            id: .deleteOriginal,
+            title: "Delete original after converting",
+            isOn: viewModel.deleteOriginalAfterConversion
+        ) { [weak self] isOn in
+            self?.viewModel.deleteOriginalAfterConversion = isOn
+            self?.refreshStatusMenuState()
+        }
 
         statusMenu.addItem(.separator())
         addActionItem(
@@ -206,6 +215,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         )
         statusToggleViews[.copy]?.update(
             isOn: viewModel.autoCopyConvertedFiles
+        )
+        statusToggleViews[.deleteOriginal]?.update(
+            isOn: viewModel.deleteOriginalAfterConversion
         )
     }
 

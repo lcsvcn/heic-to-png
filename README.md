@@ -37,7 +37,7 @@ A native Swift workspace for converting HEIC/HEIF images to PNG on macOS and iOS
 
 1. Build and run `HEICToPNGMac`.
 2. Click the menu-bar icon to open the compact checkbox dropdown.
-3. Use the dropdown only for quick toggles: auto-convert, watched default folders, Finder Quick Action, reveal, and copy. The dropdown stays open while you change toggles.
+3. Use the dropdown only for quick toggles: auto-convert, watched default folders, Finder Quick Action, reveal, copy, and delete original. The dropdown stays open while you change toggles.
 4. Choose **Open App** from the dropdown for larger actions.
 5. In the full app window, use **Watch Folder** for any other screenshot, export, or sync folder.
 6. Use **Convert Files** or **Convert Folder** for older HEIC/HEIF images.
@@ -56,7 +56,7 @@ Use **Watch Folder** to watch another screenshot/export folder. This is useful i
 
 The watcher preserves the original HEIC/HEIF file by default. It skips files that already have a same-name `.png` beside them, so repeated folder scans do not create endless numbered duplicates. Conversion history stays out of the menu-bar panel and is available from **See Logs**.
 
-Enable **Delete original after converting** (in the full app window, under **After Conversion**) to remove each HEIC/HEIF file once its PNG is saved. This applies to manual conversions, the folder watcher, and the Finder Quick Action, and it cannot be undone. It is off by default.
+Enable **Delete original after converting** (in the menu-bar dropdown or in the full app window, under **After Conversion**) to remove each HEIC/HEIF file once its PNG is saved. This applies to manual conversions, the folder watcher, and the Finder Quick Action, and it cannot be undone. It is off by default.
 
 The app cannot intercept AirDrop before macOS writes the received file. It watches the destination folder and creates the PNG immediately after the file appears and is readable.
 
