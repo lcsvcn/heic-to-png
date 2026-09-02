@@ -7,6 +7,7 @@ enum MacConversionPreferences {
         static let finderQuickActionEnabled = "finderQuickActionEnabled"
         static let autoRevealConvertedFiles = "autoRevealConvertedFiles"
         static let autoCopyConvertedFiles = "autoCopyConvertedFiles"
+        static let deleteOriginalAfterConversion = "deleteOriginalAfterConversion"
         static let autoConvertNewHEICFiles = "autoConvertNewHEICFiles"
         static let autoWatchDownloadsFolder = "autoWatchDownloadsFolder"
         static let autoWatchDesktopFolder = "autoWatchDesktopFolder"
@@ -30,6 +31,11 @@ enum MacConversionPreferences {
     static var autoCopyConvertedFiles: Bool {
         get { bool(forKey: Key.autoCopyConvertedFiles, defaultValue: false) }
         set { defaults.set(newValue, forKey: Key.autoCopyConvertedFiles) }
+    }
+
+    static var deleteOriginalAfterConversion: Bool {
+        get { bool(forKey: Key.deleteOriginalAfterConversion, defaultValue: false) }
+        set { defaults.set(newValue, forKey: Key.deleteOriginalAfterConversion) }
     }
 
     static var autoConvertNewHEICFiles: Bool {

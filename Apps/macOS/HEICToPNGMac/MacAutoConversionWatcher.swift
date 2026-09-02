@@ -152,7 +152,10 @@ final class MacAutoConversionWatcher: @unchecked Sendable {
         }
 
         do {
-            let result = try converter.convert(sourceURL)
+            let result = try converter.convert(
+                sourceURL,
+                deleteSourceAfterConversion: MacConversionPreferences.deleteOriginalAfterConversion
+            )
             pendingPaths.remove(key)
             publish(HEICPNGBatchResult(converted: [result], failures: []))
         } catch {

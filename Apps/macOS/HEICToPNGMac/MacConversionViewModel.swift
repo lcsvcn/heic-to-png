@@ -44,6 +44,16 @@ final class MacConversionViewModel: ObservableObject {
             )
         }
     }
+    @Published var deleteOriginalAfterConversion: Bool {
+        didSet {
+            MacConversionPreferences.deleteOriginalAfterConversion = deleteOriginalAfterConversion
+            logSettingChange(
+                "Delete original after converting",
+                isEnabled: deleteOriginalAfterConversion,
+                oldValue: oldValue
+            )
+        }
+    }
     @Published var autoConvertNewHEICFiles: Bool {
         didSet {
             MacConversionPreferences.autoConvertNewHEICFiles = autoConvertNewHEICFiles
@@ -87,6 +97,7 @@ final class MacConversionViewModel: ObservableObject {
         finderQuickActionEnabled = MacConversionPreferences.finderQuickActionEnabled
         autoRevealConvertedFiles = MacConversionPreferences.autoRevealConvertedFiles
         autoCopyConvertedFiles = MacConversionPreferences.autoCopyConvertedFiles
+        deleteOriginalAfterConversion = MacConversionPreferences.deleteOriginalAfterConversion
         autoConvertNewHEICFiles = MacConversionPreferences.autoConvertNewHEICFiles
         autoWatchDownloadsFolder = MacConversionPreferences.autoWatchDownloadsFolder
         autoWatchDesktopFolder = MacConversionPreferences.autoWatchDesktopFolder
@@ -190,6 +201,7 @@ final class MacConversionViewModel: ObservableObject {
         failures = []
         let shouldReveal = autoRevealConvertedFiles
         let shouldCopy = autoCopyConvertedFiles
+        let shouldDeleteOriginal = deleteOriginalAfterConversion
 
         Task.detached { [converter] in
             let input = Self.expandedConversionInput(from: urls, converter: converter)
@@ -199,7 +211,10 @@ final class MacConversionViewModel: ObservableObject {
                 }
             }
 
-            let conversionBatch = converter.convert(urls: input.fileURLs)
+            let conversionBatch = converter.convert(
+                urls: input.fileURLs,
+                deleteSourceAfterConversion: shouldDeleteOriginal
+            )
             let batch = HEICPNGBatchResult(
                 converted: conversionBatch.converted,
                 failures: input.failures + conversionBatch.failures

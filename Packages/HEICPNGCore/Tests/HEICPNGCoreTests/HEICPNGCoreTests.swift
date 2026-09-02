@@ -62,6 +62,10 @@ final class HEICPNGCoreTests: XCTestCase {
         let result = try HEICPNGConverter().convert(sourceURL)
         XCTAssertEqual(result.outputURL.pathExtension.lowercased(), "png")
         XCTAssertTrue(FileManager.default.fileExists(atPath: result.outputURL.path))
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: sourceURL.path),
+            "Expected the original HEIC file to be preserved by default."
+        )
 
         guard let imageSource = CGImageSourceCreateWithURL(result.outputURL as CFURL, nil),
               let outputType = CGImageSourceGetType(imageSource) else {
@@ -70,6 +74,55 @@ final class HEICPNGCoreTests: XCTestCase {
         }
 
         XCTAssertEqual(outputType as String, UTType.png.identifier)
+    }
+
+    func testConvertDeletesOriginalWhenRequested() throws {
+        let directory = try makeTemporaryDirectory()
+        let sourceURL = directory.appendingPathComponent("Sample.heic")
+        let wroteHEIC = try writeHEIC(to: sourceURL, image: makeTinyImage())
+
+        guard wroteHEIC else {
+            throw XCTSkip("HEIC encoding is not available on this system.")
+        }
+
+        let result = try HEICPNGConverter().convert(
+            sourceURL,
+            deleteSourceAfterConversion: true
+        )
+
+        XCTAssertTrue(FileManager.default.fileExists(atPath: result.outputURL.path))
+        XCTAssertFalse(
+            FileManager.default.fileExists(atPath: sourceURL.path),
+            "Expected the original HEIC file to be deleted when requested."
+        )
+    }
+
+    func testBatchConversionDeletesOnlySuccessfullyConvertedOriginals() throws {
+        let directory = try makeTemporaryDirectory()
+        let validURL = directory.appendingPathComponent("Valid.heic")
+        let corruptURL = directory.appendingPathComponent("Broken.heic")
+        let wroteHEIC = try writeHEIC(to: validURL, image: makeTinyImage())
+
+        guard wroteHEIC else {
+            throw XCTSkip("HEIC encoding is not available on this system.")
+        }
+
+        try Data("not really an image".utf8).write(to: corruptURL)
+
+        let result = HEICPNGConverter().convert(
+            urls: [corruptURL, validURL],
+            deleteSourceAfterConversion: true
+        )
+
+        XCTAssertEqual(result.converted.count, 1)
+        XCTAssertFalse(
+            FileManager.default.fileExists(atPath: validURL.path),
+            "Expected the successfully converted original to be deleted."
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: corruptURL.path),
+            "Expected the failed conversion's original to be left in place."
+        )
     }
 
     func testConvertsHEICWithTransparencyToPNGPreservingAlphaWhenSystemEncoderSupportsAlpha() throws {

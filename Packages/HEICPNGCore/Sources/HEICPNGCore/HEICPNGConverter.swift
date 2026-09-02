@@ -36,7 +36,8 @@ public final class HEICPNGConverter: @unchecked Sendable {
     @discardableResult
     public func convert(
         _ sourceURL: URL,
-        destinationDirectory: URL? = nil
+        destinationDirectory: URL? = nil,
+        deleteSourceAfterConversion: Bool = false
     ) throws -> HEICPNGConversionResult {
         guard isSupportedHEICFile(sourceURL) else {
             throw HEICPNGConversionError.unsupportedFile(sourceURL)
@@ -84,19 +85,28 @@ public final class HEICPNGConverter: @unchecked Sendable {
             throw HEICPNGConversionError.outputWriteFailed(outputURL)
         }
 
+        if deleteSourceAfterConversion {
+            try? fileManager.removeItem(at: sourceURL)
+        }
+
         return HEICPNGConversionResult(sourceURL: sourceURL, outputURL: outputURL)
     }
 
     public func convert(
         urls: [URL],
-        destinationDirectory: URL? = nil
+        destinationDirectory: URL? = nil,
+        deleteSourceAfterConversion: Bool = false
     ) -> HEICPNGBatchResult {
         var converted: [HEICPNGConversionResult] = []
         var failures: [HEICPNGConversionFailure] = []
 
         for url in urls {
             do {
-                let result = try convert(url, destinationDirectory: destinationDirectory)
+                let result = try convert(
+                    url,
+                    destinationDirectory: destinationDirectory,
+                    deleteSourceAfterConversion: deleteSourceAfterConversion
+                )
                 converted.append(result)
             } catch {
                 failures.append(

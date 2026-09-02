@@ -28,7 +28,10 @@ final class FinderActionRequestHandler: NSObject, NSExtensionRequestHandling, @u
             }
 
             let urls = await Self.fileURLs(from: context.inputItems)
-            let batch = converter.convert(urls: urls)
+            let batch = converter.convert(
+                urls: urls,
+                deleteSourceAfterConversion: MacConversionPreferences.deleteOriginalAfterConversion
+            )
             let outputURLs = batch.converted.map(\.outputURL)
             MacConversionLogStore.appendConversionBatch(batch, source: .finderQuickAction)
 

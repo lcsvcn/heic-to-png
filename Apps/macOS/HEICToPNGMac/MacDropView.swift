@@ -173,6 +173,16 @@ struct MacDropView: View {
                     systemImage: "doc.on.doc",
                     isOn: $viewModel.autoCopyConvertedFiles
                 )
+
+                rowDivider
+
+                settingsToggleRow(
+                    title: "Delete original after converting",
+                    activeDescription: "The original HEIC/HEIF file is deleted once the PNG is saved. This cannot be undone.",
+                    inactiveDescription: "The original HEIC/HEIF file is kept beside the converted PNG.",
+                    systemImage: "trash",
+                    isOn: $viewModel.deleteOriginalAfterConversion
+                )
             }
         }
     }
